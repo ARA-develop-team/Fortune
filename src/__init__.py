@@ -1,3 +1,3 @@
 """ Source Init File """
 
-from src.draft import *
+from src.config_parser import get_api_data

@@ -6,7 +6,7 @@ import math
 import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-df = yf.download('BTC-USD')
+df = yf.download('ETH-USD')
 print(df)
 
 # Train test split
@@ -19,6 +19,7 @@ testing_data = list(df[to_row:]['Adj Close'])
 model_predictions = []
 n_test_observation = len(testing_data)
 
+print(training_data)
 for i in range(n_test_observation):
     model = sm.tsa.arima.ARIMA(training_data, order=(4, 1, 0))
     model_fit = model.fit()
@@ -28,7 +29,8 @@ for i in range(n_test_observation):
     actual_test_value = testing_data[i]
     training_data.append(actual_test_value)
 
-print(model_fit.summary())
+
+#print(model_fit.summary())
 
 plt.figure(figsize=(15, 9))
 plt.grid(True)

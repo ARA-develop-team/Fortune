@@ -2,7 +2,10 @@ import json
 
 
 def get_api_data(file_name):
-    """Return api_key and api_secret"""
+    """ Parsing of API key and secret.
+    :param file_name: - name of config file.
+    :return: api_key and api_secret.
+    """
 
     file = open(file_name, "r")
     data = json.load(file)

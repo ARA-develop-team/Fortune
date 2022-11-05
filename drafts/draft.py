@@ -1,13 +1,14 @@
 import src
 import asyncio
 import json
-from binance import AsyncClient
+# from binance import AsyncClient
 
 from binance.client import Client
-# from config_parser import get_api_data
-from binance import BinanceSocketManager
+from src.config_parser import get_api_data
+# from binance import BinanceSocketManager
 
 from datetime import datetime
+# from binance.spot import Spot
 
 
 def create_client():
@@ -33,9 +34,15 @@ def create_price_list():
     return price_list
 
 
+def check(key, secret):
+    client = Spot(key=key, secret=secret)
+    print(client.account(symbol='BTCBUSD'))
+
+
 if __name__ == "__main__":
-    test_list = create_price_list()
-    print(test_list)
+    check(*get_api_data("../config/api_config.json"))
+    # test_list = create_price_list()
+    # print(test_list)
 
     # bsm = BinanceSocketManager(client)
     # socket = bsm.trade_socket('BTCUSDT')

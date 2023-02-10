@@ -1,6 +1,10 @@
-""" Source Init File """
+"""          Source Additional Directory
+
+Provides all necessary functionality.
+Contains config parser, main api class.
+
+"""
 
 from src.config_parser import get_api_data
-from src.arima_engine import predict_arima
 
 import src.api_binance

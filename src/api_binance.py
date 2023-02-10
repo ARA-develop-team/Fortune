@@ -1,6 +1,5 @@
 """ Client API """
 
-
 from src.config_parser import get_api_data
 from binance.client import Client
 

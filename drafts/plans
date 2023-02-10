@@ -1,0 +1,10 @@
+> Config parser
+    - Add multi-user API parser.
+
+> Input data
+    - Add time counter.
+    - Add multi-currency.
+
+> Tests
+    - Check neural-network's accuracy
+    - Create demo-Wallet

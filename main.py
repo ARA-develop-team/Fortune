@@ -12,6 +12,8 @@ def main():
     api = src.api_binance.API("config/api_config.json")
     print("Hello from ARA Development!")
 
+    return 0
+
 
 if __name__ == "__main__":
     main()

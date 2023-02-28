@@ -1,7 +1,10 @@
+# Our code
 /config/api_config.json
+drafts/
 
-/.pytest_cache
+# cache
 /venv
-
+/.pytest_cache
 __pycache__/
-
+unit_tests/__pycache__/
+src/__pycache__

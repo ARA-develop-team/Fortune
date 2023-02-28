@@ -1,2 +1,7 @@
 /config/api_config.json
+
+/.pytest_cache
 /venv
+
+__pycache__/
+

@@ -6,5 +6,10 @@
 """  Launched: 7 okt 2022        """
 
 
-if __name__ == "__main__":
+def main():
     print("Hello from ARA Development\n")
+    return 0
+
+
+if __name__ == "__main__":
+    main()

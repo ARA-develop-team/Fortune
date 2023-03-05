@@ -10,11 +10,9 @@ import src
 
 def main():
     try:
-        src.api_binance.API('./config/api_config.json')
+        src.api_binance.API('./config/api_confg.json')
     except FileNotFoundError:
-        print(f'[Warning] Cannot find api config file')
-        src.generate_config.add_api_json()
-        return
+        return 0
 
     return 0
 

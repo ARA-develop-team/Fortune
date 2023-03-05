@@ -6,7 +6,7 @@ import main
 
 
 class MyTestCase(unittest.TestCase):
-    def test_something(self):
+    def test_build(self):
         self.assertEqual(main.main(), 0)
 
 

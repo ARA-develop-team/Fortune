@@ -1,4 +1,5 @@
 import json
+from src import generate_config
 
 
 def get_api_data(file_name):
@@ -6,8 +7,15 @@ def get_api_data(file_name):
     :param file_name: - name of config file.
     :return: api_key and api_secret.
     """
+    try:
+        file = open(file_name, "r")
 
-    file = open(file_name, "r")
+    except FileNotFoundError:
+        if file_name == "./config/api_config.json":
+            print(f'[Warning] Cannot find api config file')
+            generate_config.add_api_json()
+        return -1
+
     data = json.load(file)
     return data['api-key'], data['api-secret']
 

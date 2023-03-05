@@ -9,7 +9,11 @@ import src
 
 
 def main():
-    print("Hello from ARA Development!")
+    try:
+        src.api_binance.API('./config/api_confg.json')
+    except FileNotFoundError:
+        return 0
+
     return 0
 
 

@@ -1,13 +1,19 @@
 """ Client API """
 
-from src.config_parser import get_api_data
+import src
 from binance.client import Client
 
 
 class API:
     """ Binance API """
     def __init__(self, addr_config):
-        self.client = Client(*get_api_data(addr_config))
+        api_data = src.get_api_data(addr_config)
+        if api_data != -1:
+            self.client = Client()
+        else:
+            raise FileNotFoundError
+
+
 
     def load_data_history(self):
         # TODO change date to automated counter

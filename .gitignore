@@ -1,6 +1,7 @@
 # Our code
 /config/api_config.json
 drafts/
+logs/*.log
 
 # cache
 /venv

@@ -9,8 +9,8 @@ from src.config_parser import get_api_data
 
 import src.generate_config
 import src.api_binance
+import src.log_setup
 
-print("ARA Development: Fortune")
-# to logs
-print("Launching project...")
-print("Connecting sources")
+
+print("*** ARA Development: Fortune ***\nAll rights reserved!")
+

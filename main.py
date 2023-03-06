@@ -1,4 +1,5 @@
 import src
+import logging
 
 """           FORTUNE            """
 """   ARA Development present    """
@@ -9,9 +10,11 @@ import src
 
 
 def main():
+    src.log_setup.configurate_logs()
     try:
-        src.api_binance.API('./config/api_confg.json')
+        src.api_binance.API('./config/api_config.json')
     except FileNotFoundError:
+        logging.error("[FileNotFoundError] - api_config.json")
         return 0
 
     return 0

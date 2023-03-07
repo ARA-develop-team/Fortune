@@ -14,7 +14,6 @@ def main():
     try:
         src.api_binance.API('./config/api_config.json')
     except FileNotFoundError:
-        logging.error("[FileNotFoundError] - api_config.json")
         return 0
 
     return 0

@@ -1,3 +1,6 @@
+import logging
+
+
 class Analyst:
     def __init__(self, threshold=0.75):
         self.threshold = threshold
@@ -10,7 +13,8 @@ class Analyst:
             :arg vector: probability of cryptocurrency price growth.
             :return: buy/keep crypto - True, sell - False.
         """
-
-        return self.analyse_threshold(vector)
+        decision = self.analyse_threshold(vector)
+        logging.info(f"Vector: {vector}, Decision: {decision}")
+        return decision
 
 

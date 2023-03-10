@@ -1,19 +1,21 @@
 """ Client API """
 
 import src
+import logging
+
 from binance.client import Client
 
 
 class API:
     """ Binance API """
+
     def __init__(self, addr_config):
         api_data = src.get_api_data(addr_config)
         if api_data != -1:
             self.client = Client()
+            logging.info("API client configured successfully")
         else:
             raise FileNotFoundError
-
-
 
     def load_data_history(self):
         # TODO change date to automated counter

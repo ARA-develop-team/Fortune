@@ -1,0 +1,17 @@
+version: 1
+disable_existing_loggers: false
+
+handlers:
+  file_handler:
+    class: logging.FileHandler
+    filename: ./logs/%(asctime)s.log
+    level: INFO
+    formatter: simple
+
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+root:
+  level: INFO
+  handlers: [file_handler]

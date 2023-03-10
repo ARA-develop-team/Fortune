@@ -1,3 +1,5 @@
+import logging
+
 import wallet_exceptions
 
 
@@ -5,6 +7,7 @@ class Wallet:
     def __init__(self, amount, currency):
         self.amount = amount
         self.currency = currency
+        logging.info("Demo-Wallet was configured successfully")
 
     def convert_to(self, to_currency):
         try:

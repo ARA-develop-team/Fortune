@@ -1,4 +1,4 @@
-import src
+from project import Fortune
 
 """           FORTUNE            """
 """   ARA Development present    """
@@ -8,15 +8,6 @@ import src
 """  Launched: 7 okt 2022        """
 
 
-def main():
-    src.log_setup.configurate_logs()
-    try:
-        src.api_binance.API()
-    except FileNotFoundError:
-        return 0
-
-    return 0
-
 
 if __name__ == "__main__":
-    main()
+    Fortune.test_api_client()

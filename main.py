@@ -9,12 +9,6 @@ import src
 
 
 def main():
-    src.log_setup.configurate_logs()
-    try:
-        src.api_binance.API()
-    except FileNotFoundError:
-        return 0
-
     return 0
 
 

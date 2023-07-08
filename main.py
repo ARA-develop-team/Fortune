@@ -10,4 +10,5 @@ from project import Fortune
 
 
 if __name__ == "__main__":
-    Fortune.test_api_client()
+    fortune = Fortune()
+    fortune.test_api_client()

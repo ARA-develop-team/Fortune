@@ -1,7 +1,7 @@
 import src
 
 class Fortune:
-    def test_api_client():
+    def test_api_client(self):
         src.log_setup.configurate_logs()
         try:
             src.api_binance.API()

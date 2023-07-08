@@ -5,6 +5,8 @@ class Analyst:
     def __init__(self, threshold=0.75):
         self.threshold = threshold
 
+        self.logger = logging.getLogger(__class__.__name__)
+
     def analyse_threshold(self, vector):
         return vector >= self.threshold
 
@@ -14,7 +16,7 @@ class Analyst:
             :return: buy/keep crypto - True, sell - False.
         """
         decision = self.analyse_threshold(vector)
-        logging.info(f"Vector: {vector}, Decision: {decision}")
+        self.logger.info(f"Vector: {vector}, Decision: {decision}")
         return decision
 
 

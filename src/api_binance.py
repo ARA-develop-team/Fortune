@@ -18,7 +18,9 @@ class API:
             raise FileNotFoundError
 
         self.client = Client()
-        logging.info("API client configured successfully")
+
+        self.logger = logging.getLogger(__class__.__name__)
+        self.logger.info("API client configured successfully")
 
     def load_data_history(self):
         # TODO change date to automated counter

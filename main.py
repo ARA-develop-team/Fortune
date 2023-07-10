@@ -8,7 +8,10 @@ from project import Fortune
 """  Launched: 7 okt 2022        """
 
 
+def main():
+    fortune = Fortune()
+    fortune.run()
+
 
 if __name__ == "__main__":
-    fortune = Fortune()
-    fortune.test_api_client()
+    main()

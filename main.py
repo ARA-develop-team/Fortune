@@ -1,4 +1,4 @@
-import src
+from project import Fortune
 
 """           FORTUNE            """
 """   ARA Development present    """
@@ -9,7 +9,8 @@ import src
 
 
 def main():
-    return 0
+    fortune = Fortune()
+    fortune.run()
 
 
 if __name__ == "__main__":

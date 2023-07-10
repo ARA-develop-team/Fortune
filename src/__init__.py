@@ -1,4 +1,4 @@
-"""  Source Additional Directory
+"""  Source Additional Package
 
 Provides all necessary functionality.
 Contains config parser, main api class.

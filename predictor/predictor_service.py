@@ -1,5 +1,5 @@
 
-class PredictorModel:
+class Predictor:
     def __init__(self):
         self.training_set = [0, 0]
 

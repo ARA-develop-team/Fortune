@@ -14,7 +14,6 @@ class API(Client):
     """ Binance API """
 
     CLIENT_CONFIG_FILE = '/config/api_config.json'
-
     BTCUSDT = 'BTCUSDT'
 
     def __init__(self, api_key, api_secret):

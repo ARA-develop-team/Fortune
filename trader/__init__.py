@@ -1,4 +1,4 @@
-"""         Trading Module Directory
+"""         Trading Module Package
 
 Include code for making purchase and simulating trades
 for analysing accuracy of prediction module.

@@ -7,13 +7,13 @@ import datetime
 from multiprocessing import Process, Queue
 from binance.client import Client
 
-import src
+from . import get_api_data
 
 
 class API(Client):
     """ Binance API """
 
-    CLIENT_CONFIG_FILE = '/config/api_config.json'
+    CLIENT_CONFIG_FILE = 'api_config.json'
     BTCUSDT = 'BTCUSDT'
 
     def __init__(self, api_key, api_secret):
@@ -122,7 +122,7 @@ class API(Client):
         return data
 
 
-def configure_binance_api():
+def configure_binance_api(config_file):
     """Configures the Binance API client.
 
     This function reads the API configuration data from the specified file, creates a Binance API client instance,
@@ -131,7 +131,7 @@ def configure_binance_api():
     :raises FileNotFoundError: If the API configuration file is not found.
     :return: The configured Binance API client.
     """
-    api_data = src.get_api_data(src.PROJECT_PATH + API.CLIENT_CONFIG_FILE)
+    api_data = get_api_data(config_file)
     if api_data == -1:
         raise FileNotFoundError
 
@@ -140,6 +140,6 @@ def configure_binance_api():
 
 
 if __name__ == '__main__':
-    api = configure_binance_api()
+    api = configure_binance_api('./config/api_config.json')
     prices = api.load_price_history(api.BTCUSDT, Client.KLINE_INTERVAL_15MINUTE)
     print(len(prices))

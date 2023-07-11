@@ -1,13 +1,22 @@
 import logging
-import src
+
+from src import api_binance, log_setup
 
 
 class Fortune:
-    def __init__(self):
-        src.log_setup.configurate_logs()
-        self.client = src.api_binance.configure_binance_api()
+    CONFIG_PATH = './src/config/'
 
+    def __init__(self):
+        log_setup.configurate_logs(self.CONFIG_PATH + 'log_config.yml')
         self.logger = logging.getLogger(__class__.__name__)
 
+        self.client = api_binance.configure_binance_api(self.CONFIG_PATH + api_binance.API.CLIENT_CONFIG_FILE)
+        self.client.launch_price_update_subprocess(self.client.BTCUSDT, 1)
+
     def run(self):
-        pass
+        self.logger.info("Fortune is running")
+
+        for _ in range(4):
+            print(self.client.await_price_update())
+
+        self.client.terminate_price_update_subprocess()

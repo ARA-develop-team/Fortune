@@ -4,7 +4,7 @@ import logging.config
 import time
 
 
-def configurate_logs(file="./config/log_config.yml"):
+def configurate_logs(file):
     try:
         with open(file) as cfg_file:
             config = yaml.safe_load(cfg_file.read())
@@ -22,5 +22,5 @@ def configurate_logs(file="./config/log_config.yml"):
 
 
 if __name__ == '__main__':
-    configurate_logs("../config/log_config.yml")
+    configurate_logs("./config/log_config.yml")
 

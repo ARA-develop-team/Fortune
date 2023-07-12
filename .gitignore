@@ -1,5 +1,5 @@
 # Our code
-/config/api_config.json
+/src/config/api_config.json
 drafts/
 logs/*.log
 

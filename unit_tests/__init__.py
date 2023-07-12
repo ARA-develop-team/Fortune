@@ -1,5 +1,7 @@
-import os
-import sys
+""" Unit Tests Package
 
-PROJECT_PATH = os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
-sys.path.append(PROJECT_PATH)
+This package contains unit tests for the application's modules and components.
+It provides a comprehensive suite of tests to verify the correctness and
+functionality of individual units of code.
+
+"""

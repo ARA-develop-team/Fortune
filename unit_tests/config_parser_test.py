@@ -1,10 +1,10 @@
-import unittest
 import os
-import json
 import sys
+import json
+import unittest
+
 from io import StringIO
 
-import unit_tests    # append project path
 from src.config_parser import get_api_data
 from src.generate_config import add_api_json
 

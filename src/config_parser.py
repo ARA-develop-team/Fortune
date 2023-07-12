@@ -1,7 +1,7 @@
 import json
 import logging
 
-from src import generate_config
+from . import generate_config
 
 
 def get_api_data(file_name):
@@ -24,4 +24,4 @@ def get_api_data(file_name):
 
 
 if __name__ == "__main__":
-    get_api_data("../config/api_config.json")
+    get_api_data("./config/api_config.json")

@@ -32,7 +32,7 @@ class Snowfall():
         # inverse from (0, 1) range to actual value
         prediction = scaler.inverse_transform(prediction)
 
-        return prediction
+        return prediction[0][0]
     
 
 if __name__ == '__main__':

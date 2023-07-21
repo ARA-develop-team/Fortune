@@ -9,8 +9,20 @@ class Predictor:
         self.logger = logging.getLogger(__class__.__name__)
 
     def predict(self, data):
+        """
+        Make predictions using a list of data.
+
+        This method uses the `model_handler` to predict the next number based on the input `data`. 
+        The input `data` should be of the correct size, which can be found in the `model_handler` documentation
+        or accessed using `self.model_handler.NUM_OF_PREV_ITEMS`.
+        ("Snowfall" model by default use - 5, you can see it in config.json).
+
+        :param data: list of numbers of correct size
+        :return: predicted number
+        """
+
         if len(data) == self.model_handler.NUM_OF_PREV_ITEMS:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"[Error] Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, get lenght - {len(data)}"         
+            massage = f"[Error] Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not lenght - {len(data)}"         
             self.logger.error(massage)

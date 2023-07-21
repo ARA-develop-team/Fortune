@@ -1,4 +1,5 @@
 import logging
+import predictor
 
 from src import api_binance, log_setup
 
@@ -14,6 +15,9 @@ class Fortune:
         self.client.launch_price_update_subprocess(self.client.BTCUSDT, 1)
 
     def run(self):
+        # p = predictor.Predictor()
+        # print(p.predict([1, 23, 45, 6, 4]))
+        
         self.logger.info("Fortune is running")
 
         for _ in range(4):

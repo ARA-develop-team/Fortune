@@ -1,17 +1,8 @@
+from .models.sf1.snowfall_model import Snowfall
 
 class Predictor:
     def __init__(self):
-        self.training_set = [0, 0]
-
-    def get_training_set(self):
-        return self.training_set
-
-    def train_model(self, data):
-        pass
+        self.model_handler = Snowfall()
 
     def predict(self, data):
-        s = 0
-        for elem in data:
-            s += elem
-
-        return s / len(data)
+        return self.model_handler.predict_next(data)

@@ -1,25 +1,28 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from pandas import read_csv
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from keras.layers import Dropout
+import keras
+import os
 
-from tensorflow import keras
+from .config_parser import get_network_data
 
 class Snowfall():
-    def __init__(self, model):
-        self.model = model
-        self.NUM_OF_PREV_ITEMS = 5
+    def __init__(self):
+        data = get_network_data(os.path.join(os.path.dirname(__file__), "config.json"))
+        relative_path = data["relative-path"]
+        self.NUM_OF_PREV_ITEMS = data["num-of-privious-item"]
+
+
+        path_to_model = os.path.join(os.path.dirname(__file__), relative_path)
+        self.model = keras.models.load_model(path_to_model)
+
 
     def predict_next(self, data_set):
         """Predict next value using model"""
 
         # min-max normalixation (inverse to (0, 1) range)
         scaler = MinMaxScaler(feature_range=(0, 1))
+        data_set = np.reshape(data_set, (-1, 1))
         data = scaler.fit_transform(data_set)
 
         data = np.reshape(data, (1, 1, self.NUM_OF_PREV_ITEMS))
@@ -33,11 +36,9 @@ class Snowfall():
     
 
 if __name__ == '__main__':
-    model = Snowfall(keras.models.load_model('models/snowfall_1'))
+    model = Snowfall()
 
     data = read_csv('BTC-USD.csv', usecols=[3])
     data = data.astype('float32')
 
-    data = data[-5:]
-
-    print(model.predict_next(data))
+    print(model.predict_next([[100], [123], [12], [34], [22]]))

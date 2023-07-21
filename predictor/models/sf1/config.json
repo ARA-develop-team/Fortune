@@ -1,0 +1,7 @@
+{
+    "relative-path": "model",
+    "num-of-privious-item": 5,
+    "epochs": 10,
+    "batch-size": 10,
+    "verbose": 2
+}

@@ -2,3 +2,7 @@ flake8
 pytest
 python-binance
 pyyaml
+keras
+numpy
+pandas
+scikit-learn

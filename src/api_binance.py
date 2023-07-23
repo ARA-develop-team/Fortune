@@ -1,13 +1,19 @@
 """ Client API """
-
+import csv
 import time
 import logging
 import datetime
 
 from multiprocessing import Process, Queue
 from binance.client import Client
+from requests.exceptions import RequestException
 
 from . import get_api_data
+
+
+def convert_timestamp_to_str(timestamp):
+    dt_object = datetime.date.fromtimestamp(timestamp / 1000)
+    return dt_object.strftime('%-d %b %Y')
 
 
 class API(Client):
@@ -29,6 +35,15 @@ class API(Client):
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(f"Client configured successfully!")
 
+    def _get_new_price(self, symbol):
+        try:
+            response_ = self.get_avg_price(symbol=symbol)
+        except RequestException as exception:
+            self.logger.error(f"Unable to retrieve the latest price!\n{exception}")
+            return None
+        else:
+            return response_['price']
+
     def _update_price(self, symbol, interval):
         """Retrieves the latest price for a given trading symbol and puts it into the price_queue.
 
@@ -39,10 +54,11 @@ class API(Client):
         interval_in_seconds = interval * 60
 
         while True:
-            response = self.get_avg_price(symbol=symbol)
-            avg_price = response['price']
-            self.price_queue.put(avg_price)
-            self.logger.info(f"Price updated. Current rate is {avg_price}")
+            new_price = self._get_new_price(symbol)
+            if new_price:
+                self.price_queue.put(new_price)
+                self.logger.info(f"Price updated. Current rate is {new_price}")
+
             time.sleep(interval_in_seconds)
 
     def launch_price_update_subprocess(self, symbol, interval):
@@ -60,6 +76,7 @@ class API(Client):
             return
 
         self._price_update_subprocess = Process(target=self._update_price, args=(symbol, interval))
+        self._price_update_subprocess.daemon = True
         self._price_update_subprocess.start()
         self.logger.info("Price update subprocess was launched")
 
@@ -86,8 +103,13 @@ class API(Client):
         until the queue becomes empty. If the price queue is empty, the function waits and blocks until
         a new price is available in the queue.
 
-        :return: The latest price retrieved from the price queue.
+        :return: The latest price retrieved from the price queue. If the subprocess for updating prices is not running
+        or is not alive, 'None' value will be returned.
         """
+        if not self._price_update_subprocess or not self._price_update_subprocess.is_alive():
+            self.logger.error("Subprocess for updating prices is not running!")
+            return None
+
         price = self.price_queue.get(block=True)
         while not self.price_queue.empty():
             price = self.price_queue.get()
@@ -107,19 +129,59 @@ class API(Client):
         Taker buy base asset volume, Taker buy quote asset volume, Ignore)
         """
 
-        end_date = datetime.datetime.now()
-        one_day = datetime.timedelta(days=1)
+        all_data = []
+        end_date = datetime.datetime.now().strftime('%-d %b %Y')
+        limit = 1000
 
-        data = self.get_historical_klines(symbol, interval, start_str='1 Jan 2000', end_str=str(end_date))
+        while True:
+            data = self.get_historical_klines(symbol, interval, end_str=end_date, limit=limit)
+            all_data = data + all_data
+            if len(data) < limit:
+                break
 
-        first_data_date = datetime.datetime.fromtimestamp(data[1][0] / 1000)
-        last_data_date = datetime.datetime.fromtimestamp(data[-1][0] / 1000)
+            end_date = convert_timestamp_to_str(data[0][0])
+            print(f"\rLoading price history: {end_date}", end="", flush=True)
+        print(f"\rLoading price history: DONE", end="\n", flush=True)
+
+        first_data_date = convert_timestamp_to_str(all_data[1][0])
+        last_data_date = convert_timestamp_to_str(all_data[-1][0])
         self.logger.info(f"Price history loaded: \nFrom {first_data_date} to {last_data_date}")
 
-        if last_data_date < (end_date - one_day):
-            self.logger.warning("Price history retrieval is incomplete or unavailable")
+        return all_data
 
-        return data
+    def _check_column_for_duplicates(self, data, column_index):
+        column_values = [row[column_index] for row in data]
+
+        seen_values = set()
+        for value in column_values:
+            if value in seen_values:
+                self.logger.warning("Data duplicity occurs!")
+                return
+            seen_values.add(value)
+
+        self.logger.info("No data duplication was detected")
+
+    def save_price_history_csv(self, symbol, interval, file_path):
+        """Save price history data to CSV
+
+        :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to load historical data.
+        :param interval: The time interval for the klines data (e.g., Client.KLINE_INTERVAL_15MINUTE).
+        :param file_path: File path to save data, which may not currently exist.
+
+        :return: The path to the newly created/updated file.
+        """
+        data = self.load_price_history(symbol, interval)
+        self._check_column_for_duplicates(data, 0)
+
+        with open(file_path, 'w', newline='') as csv_file:
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
+                                 'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
+                                 'Taker buy quote asset volume', 'Ignore'])
+            csv_writer.writerows(data)
+
+        self.logger.info(f"Saved {len(data)} records to \n{file_path}")
+        return file_path
 
 
 def configure_binance_api(config_file):
@@ -142,4 +204,5 @@ def configure_binance_api(config_file):
 if __name__ == '__main__':
     api = configure_binance_api('./config/api_config.json')
     prices = api.load_price_history(api.BTCUSDT, Client.KLINE_INTERVAL_15MINUTE)
+    api.save_price_history_csv(api.BTCUSDT, api.KLINE_INTERVAL_15MINUTE, "./tmp.csv")
     print(len(prices))

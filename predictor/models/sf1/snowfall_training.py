@@ -21,8 +21,6 @@ class SnowfallTestTrain():
         self.batch_size = config_data["batch-size"]
         self.verbose = config_data["verbose"]
 
-        self.path = config_data["relative-path"]
-
         self.model = Sequential()
         self.model.add(LSTM(units=100, return_sequences=True, input_shape=(1, num_of_previous_item)))
         self.model.add(Dropout(0.5))
@@ -50,11 +48,11 @@ class SnowfallTestTrain():
         train_x = np.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
 
         self.model.compile(loss='mean_squared_error', optimizer='adam')
-        self.model.fit(train_x, train_y, self.epochs, self.batch_size , self.verbose)
+        self.model.fit(train_x, train_y, epochs=self.epochs, batch_size=self.batch_size , verbose=self.verbose)
 
-    def save_model(self):
-        print(f"Model 'sf' saved to - {self.path}")
-        self.model.save(self.path)
+    def save_model(self, path):
+        print(f"Model 'sf' saved to - {path}")
+        self.model.save(path)
 
     def show_test_predict(self, data_set, show_all_data=True):
         """Used to test how this model is perform with data. 

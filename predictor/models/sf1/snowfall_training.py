@@ -122,10 +122,9 @@ class SnowfallTestTrain():
         return np.array(x), np.array(y)
     
 if __name__ == '__main__':
-    data = read_csv('Bitcoin Price.csv', usecols=[5])
+    data = read_csv('tmp.csv', usecols=[3])
     data = data.astype('float32')
-
-    model = SnowfallTestTrain(data, 5)
+    model = SnowfallTestTrain(data, 50)
 
     model.train_test()
-    model.save_model()
+    model.save_model('model_15m')

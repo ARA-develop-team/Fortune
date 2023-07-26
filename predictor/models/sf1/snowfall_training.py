@@ -38,7 +38,7 @@ class SnowfallTestTrain():
         train_data, test_data = self.train_test_split(self.data, train_cof)
         self.train(train_data)
 
-        self.show_test_predict(test_data, show_all_data=False)
+        self.show_test_predict(test_data)
 
     def train(self, train_data):
         # min-max normalixation (inverse to (0, 1) range)

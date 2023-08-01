@@ -9,20 +9,20 @@ from sklearn.metrics import mean_squared_error
 from keras.layers import Dropout
 
 from config_parser import get_network_data
-
+from ..data_processing import reconstruct_data
 
 class SnowfallTestTrain():
-    def __init__(self, data, num_of_previous_item):
+    def __init__(self, data, shape):
         config_data = get_network_data("config.json")
 
-        self.NUM_OF_PREV_ITEMS = num_of_previous_item
+        self.NUM_OF_PREV_ITEMS = shape[1]
 
         self.epochs = config_data["epochs"]
         self.batch_size = config_data["batch-size"]
         self.verbose = config_data["verbose"]
-
+        # TODO use more input shape -->                               \
         self.model = Sequential()
-        self.model.add(LSTM(units=100, return_sequences=True, input_shape=(1, num_of_previous_item)))
+        self.model.add(LSTM(units=100, return_sequences=True, input_shape=shape))
         self.model.add(Dropout(0.5))
         self.model.add(LSTM(units=50, return_sequences=True))
         self.model.add(Dropout(0.3))
@@ -44,7 +44,7 @@ class SnowfallTestTrain():
         # min-max normalixation (inverse to (0, 1) range)
         data_transformed = self.scaler.fit_transform(train_data)
 
-        train_x, train_y = self._reconstruct_data(data_transformed)
+        train_x, train_y = reconstruct_data(data_transformed, self.NUM_OF_PREV_ITEMS)
         train_x = np.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
 
         self.model.compile(loss='mean_squared_error', optimizer='adam')
@@ -63,7 +63,7 @@ class SnowfallTestTrain():
         data_transformed = self.scaler.fit_transform(data_set)
 
         # reshape data 
-        test_x, test_y = self._reconstruct_data(data_transformed)
+        test_x, test_y = reconstruct_data(data_transformed, self.NUM_OF_PREV_ITEMS)
         test_x = np.reshape(test_x, (test_x.shape[0], 1, test_x.shape[1])) 
 
         # make prediction
@@ -95,36 +95,11 @@ class SnowfallTestTrain():
         train, test = data[0:int(len(data) * train_cof), :], data[int(len(data) * train_cof):len(data), :]
 
         return train, test
-
-    def _reconstruct_data(self, data):
-        #TODO remove from class
-        """Reshape the data to input data and label(output).
-
-        For example - data_set=[[1], [2], [3], [4], [5], [6], [7], [8]], n=3
-        The result - [1, 2, 3] -> 4; [2, 3, 4] -> [5] ...
-        The result data will be return in form:
-        (array([[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7]]), 
-        array([4, 5, 6, 7, 8]))
-
-        :param data_set: numpy array
-        :param n: number of previous number to predict next
-        :return: input array - x; label(output) array - y
-        """
-
-        n = self.NUM_OF_PREV_ITEMS
-        x, y = [], []
-
-        for i in range(len(data) - n):
-            a = data[i:(i + n), 0]
-            x.append(a)
-            y.append(data[i + n, 0])
-
-        return np.array(x), np.array(y)
     
 if __name__ == '__main__':
-    data = read_csv('tmp.csv', usecols=[3])
+    data = read_csv('tmp.csv')
     data = data.astype('float32')
-    model = SnowfallTestTrain(data, 50)
+    model = SnowfallTestTrain(data, (12, 50))
 
     model.train_test()
     model.save_model('model_15m')

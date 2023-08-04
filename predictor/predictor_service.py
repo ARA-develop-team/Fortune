@@ -24,5 +24,5 @@ class Predictor:
         if len(data) == self.model_handler.NUM_OF_PREV_ITEMS:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"[Error] Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not lenght - {len(data)}"         
+            massage = f"Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not lenght - {len(data)}"         
             self.logger.error(massage)

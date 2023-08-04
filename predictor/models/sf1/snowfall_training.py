@@ -20,7 +20,6 @@ class SnowfallTestTrain():
         self.epochs = config_data["epochs"]
         self.batch_size = config_data["batch-size"]
         self.verbose = config_data["verbose"]
-        # TODO use more input shape -->                               \
         self.model = Sequential()
         self.model.add(LSTM(units=100, return_sequences=True, input_shape=shape))
         self.model.add(Dropout(0.5))
@@ -68,11 +67,9 @@ class SnowfallTestTrain():
 
         # make prediction
         test_predict = self.model.predict(test_x)
-        #print(test_predict)
         # min-max normalixation (inverse from (0, 1) range to actual value)
         test_predict = self.scaler.inverse_transform(test_predict)
         test_labels = self.scaler.inverse_transform([test_y])
-        #print(test_predict)
         test_score = mean_squared_error(test_labels[0], test_predict[:, 0])
         print('Score on test set: %.2f MSE' % test_score)
 

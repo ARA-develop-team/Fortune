@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def reconstruct_data(data, NUM_OF_PREV_ITEMS):
+def reconstruct_data(data, num_of_prev_items):
     """Reshape the data to input data and label(output).
 
     For example - data_set=[[1], [2], [3], [4], [5], [6], [7], [8]], n=3
@@ -15,7 +15,7 @@ def reconstruct_data(data, NUM_OF_PREV_ITEMS):
     :return: input array - x; label(output) array - y
     """
 
-    n = NUM_OF_PREV_ITEMS
+    n = num_of_prev_items
     x, y = [], []
 
     for i in range(len(data) - n):

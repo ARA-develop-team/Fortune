@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from pandas import read_csv
@@ -8,12 +9,14 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from keras.layers import Dropout
 
-from config_parser import get_network_data
-from ..data_processing import reconstruct_data
+from .config_parser import get_network_data
+from data_processing import reconstruct_data
 
 class SnowfallTestTrain():
     def __init__(self, data, shape):
-        config_data = get_network_data("config.json")
+        self.PATH = os.path.dirname(__file__)
+
+        config_data = get_network_data(os.path.join(self.PATH, "config.json"))
 
         self.NUM_OF_PREV_ITEMS = shape[1]
 

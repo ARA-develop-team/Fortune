@@ -2,7 +2,7 @@
 /src/config/api_config.json
 drafts/
 logs/*.log
-predictor/dataset/
+predictor/dataset/*.csv
 
 
 # cache

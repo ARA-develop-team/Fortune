@@ -18,7 +18,7 @@ def configurate_logs(file):
         config["handlers"]["file_handler"]["filename"] = f"./logs/{timestamp}.log"
 
         logging.config.dictConfig(config)
-        logging.info("Logs were configured.")
+        logging.info("Logs were configured successfully.")
 
 
 if __name__ == '__main__':

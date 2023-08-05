@@ -33,7 +33,7 @@ class API(Client):
         self._price_update_subprocess = None
 
         self.logger = logging.getLogger(__class__.__name__)
-        self.logger.info(f"Client configured successfully!")
+        self.logger.info(f"Client was configured successfully!")
 
     def _get_new_price(self, symbol):
         try:
@@ -45,7 +45,7 @@ class API(Client):
             return response_['price']
 
     def _update_price(self, symbol, interval):
-        """Retrieves the latest price for a given trading symbol and puts it into the price_queue.
+        """ Retrieves the latest price for a given trading symbol and puts it into the price_queue.
 
         :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to retrieve the price.
         :param interval: The interval length in minutes for fetching the klines data.
@@ -62,7 +62,7 @@ class API(Client):
             time.sleep(interval_in_seconds)
 
     def launch_price_update_subprocess(self, symbol, interval):
-        """Launches a subprocess to update the price for the given symbol at the specified interval.
+        """ Launches a subprocess to update the price for the given symbol at the specified interval.
 
         This function creates a new subprocess to continuously update the price for the specified trading symbol
         at the given interval. The subprocess runs the `_update_price` method internally.
@@ -81,7 +81,7 @@ class API(Client):
         self.logger.info("Price update subprocess was launched")
 
     def terminate_price_update_subprocess(self):
-        """Terminates the subprocess responsible for updating the price.
+        """ Terminates the subprocess responsible for updating the price.
 
         This function terminates the subprocess that is responsible for updating the price of a trading symbol.
         If no subprocess is currently running, the function returns without taking any action.
@@ -92,12 +92,17 @@ class API(Client):
             self.logger.warning("There is currently no active subprocess for updating prices.")
             return
 
+        if not self._price_update_subprocess.is_alive:
+            self.logger.info("Price update subprocess is not alive.")
+            return
+
         self._price_update_subprocess.terminate()
+        self._price_update_subprocess.join()
         self._price_update_subprocess = None
-        self.logger.info("Price update subprocess was terminated")
+        self.logger.info("Price update subprocess was terminated.")
 
     def await_price_update(self):
-        """Waits for a price update by retrieving the latest price from the price queue.
+        """ Waits for a price update by retrieving the latest price from the price queue.
 
         If the price queue is not empty, this function retrieves and discards all existing prices
         until the queue becomes empty. If the price queue is empty, the function waits and blocks until
@@ -113,10 +118,11 @@ class API(Client):
         price = self.price_queue.get(block=True)
         while not self.price_queue.empty():
             price = self.price_queue.get()
-        return price
+
+        return float(price)
 
     def load_price_history(self, symbol, interval):
-        """Loads historical klines data for a specified symbol and time interval.
+        """ Loads historical klines data for a specified symbol and time interval.
 
         This function retrieves historical klines data for the specified trading symbol with the provided time interval.
         The data is fetched starting from '1 Jan 2000' up to the current date and time.
@@ -162,7 +168,7 @@ class API(Client):
         self.logger.info("No data duplication was detected")
 
     def save_price_history_csv(self, symbol, interval, file_path):
-        """Save price history data to CSV
+        """ Save price history data to CSV
 
         :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to load historical data.
         :param interval: The time interval for the klines data (e.g., Client.KLINE_INTERVAL_15MINUTE).
@@ -185,7 +191,7 @@ class API(Client):
 
 
 def configure_binance_api(config_file):
-    """Configures the Binance API client.
+    """ Configures the Binance API client.
 
     This function reads the API configuration data from the specified file, creates a Binance API client instance,
     and returns it.

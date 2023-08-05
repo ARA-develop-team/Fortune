@@ -2,11 +2,15 @@ import os
 import sys
 import json
 import unittest
+import logging
 
 from io import StringIO
 
 from src.config_parser import get_api_data
 from src.generate_config import add_api_json
+
+# Disable logging during testing
+logging.disable(logging.CRITICAL)
 
 
 class TestGenerateConfig(unittest.TestCase):

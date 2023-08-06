@@ -1,4 +1,5 @@
 from project import Fortune
+from src.parse_arguments import parse_arguments
 
 """           FORTUNE            """
 """   ARA Development present    """
@@ -9,7 +10,8 @@ from project import Fortune
 
 
 def main():
-    fortune = Fortune()
+    args_dict = parse_arguments()
+    fortune = Fortune(**args_dict)
     fortune.run()
 
 

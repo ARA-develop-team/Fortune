@@ -1,4 +1,5 @@
 from project import Fortune
+import os
 
 """           FORTUNE            """
 """   ARA Development present    """
@@ -11,6 +12,7 @@ from project import Fortune
 def main():
     fortune = Fortune()
     fortune.run()
+    p = 10
 
 
 if __name__ == "__main__":

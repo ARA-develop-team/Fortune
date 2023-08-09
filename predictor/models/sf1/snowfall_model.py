@@ -5,8 +5,9 @@ import keras
 import os
 
 from .config_parser import get_network_data
+from ..model_handler import ModelHandler
 
-class Snowfall():
+class Snowfall(ModelHandler):
     def __init__(self, model_name=None):
         PATH = os.path.dirname(__file__)
 

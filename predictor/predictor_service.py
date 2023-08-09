@@ -8,7 +8,7 @@ class Predictor:
         self.model_handler = Snowfall()
         self.logger = logging.getLogger(__class__.__name__)
 
-    def predict(self, data):
+    def predict(self, data: list) -> int:
         """
         Make predictions using a list of data.
 

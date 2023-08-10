@@ -49,10 +49,3 @@ class SnowfallTestTrain(ModelTrainer):
         print(f"Model 'sf' saved to - {path}")
         self.model.save(path)
     
-if __name__ == '__main__':
-    data = read_csv('tmp.csv')
-    data = data.astype('float32')
-    model = SnowfallTestTrain(data, (12, 50))
-
-    model.train_test()
-    model.save_model('model_15m')

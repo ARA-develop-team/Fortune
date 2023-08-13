@@ -34,6 +34,7 @@ class Fortune:
             self.process_iteration()
 
     def run(self):
+        
         self.logger.info("Fortune is running")
         self.client.launch_price_update_subprocess(self.client.BTCUSDT, 1)
 

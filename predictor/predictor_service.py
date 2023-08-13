@@ -1,17 +1,28 @@
+import logging
+
+from .models.sf1.snowfall_model import Snowfall
+
 
 class Predictor:
     def __init__(self):
-        self.training_set = [0, 0]
+        self.model_handler = Snowfall()
+        self.logger = logging.getLogger(__class__.__name__)
 
-    def get_training_set(self):
-        return self.training_set
+    def predict(self, data: list) -> int:
+        """
+        Make predictions using a list of data.
 
-    def train_model(self, data):
-        pass
+        This method uses the `model_handler` to predict the next number based on the input `data`. 
+        The input `data` should be of the correct size, which can be found in the `model_handler` documentation
+        or accessed using `self.model_handler.NUM_OF_PREV_ITEMS`.
+        ("Snowfall" model by default use - 5, you can see it in config.json).
 
-    def predict(self, data):
-        s = 0
-        for elem in data:
-            s += elem
+        :param data: list of numbers of correct size
+        :return: predicted number
+        """
 
-        return s / len(data)
+        if len(data) == self.model_handler.NUM_OF_PREV_ITEMS:
+            return self.model_handler.predict_next(data)
+        else:
+            massage = f"Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not lenght - {len(data)}"         
+            self.logger.error(massage)

@@ -6,3 +6,4 @@ keras
 numpy
 pandas
 scikit-learn
+requests~=2.31.0

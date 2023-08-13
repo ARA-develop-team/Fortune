@@ -10,6 +10,7 @@ from queue import Queue
 from trader import trader_service
 from analyst import analyst_service
 
+from src.noop_queue import NoopQueue
 from src import api_binance
 from src import discord_bot
 from src import log_setup
@@ -28,7 +29,7 @@ class Fortune:
         self.trader = trader_service.Trader()
         self.analyst = analyst_service.Analyst()
 
-        self.stats_queue = Queue()
+        self.stats_queue = Queue() if self.run_pigamma else NoopQueue()
         self.pigamma_thread = threading.Thread(target=self.configure_pigamma_wrapper)
 
     def configure_pigamma_wrapper(self):

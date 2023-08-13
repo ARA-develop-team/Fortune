@@ -12,9 +12,7 @@ class Snowfall(ModelHandler):
 
         self.model_name = model_name
 
-        relative_path = model_name
-        
-        path_to_model = os.path.join(PATH, relative_path)
+        path_to_model = os.path.join(PATH, model_name)
         self.model = keras.models.load_model(path_to_model)
 
         self.NUM_OF_PREV_ITEMS = self.model.layers[0].input_shape[2]

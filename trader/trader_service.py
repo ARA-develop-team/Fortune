@@ -2,6 +2,7 @@
 
 import logging
 
+from src.custom_types.statistics import Statistics, AccountStats
 from .demo_account import DemoAccount, reverse_exchange_rate
 
 
@@ -30,14 +31,24 @@ class Trader:
         """ Generates statistics related to the account balances.
 
         :param exchange_rate: The exchange rate. If not provided, the total value in dollars will not be calculated.
-        :return: A dictionary containing the statistics with the account currencies as keys
-                 and their corresponding balances as values.
+        :return: A Statistics named tuple containing the account statistics and the total value in dollars.
         """
-        stats = {self.dollars_account.currency: self.dollars_account.balance,
-                 self.bitcoin_account.currency: self.bitcoin_account.balance}
 
+        total_in_usd = None
         if exchange_rate is not None:
-            stats["Total"] = self.dollars_account.balance + (self.bitcoin_account.balance * exchange_rate)
+            total_in_usd = AccountStats(currency=self.dollars_account.currency,
+                                        balance=self.dollars_account.balance + (
+                                                self.bitcoin_account.balance * exchange_rate))
+
+        stats = Statistics(
+            accounts=[
+                AccountStats(currency=self.dollars_account.currency,
+                             balance=self.dollars_account.balance),
+                AccountStats(currency=self.bitcoin_account.currency,
+                             balance=self.bitcoin_account.balance)
+            ],
+            total=total_in_usd
+        )
 
         return stats
 

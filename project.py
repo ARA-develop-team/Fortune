@@ -10,7 +10,7 @@ from queue import Queue
 from trader import trader_service
 from analyst import analyst_service
 
-from src.noop_queue import NoopQueue
+from src.custom_types.noop_queue import NoopQueue
 from src import api_binance
 from src import discord_bot
 from src import log_setup

@@ -7,6 +7,7 @@ import asyncio
 from queue import Queue
 
 from . import config_parser
+from .custom_types.statistics import Statistics
 
 
 class PiGamma(discord.Client):
@@ -38,11 +39,18 @@ class PiGamma(discord.Client):
         while not self.stats_queue.empty():
             stats = self.stats_queue.get()
 
-        message = (f"Things are as follows:\n"
-                   f"Your current BTC balance is {stats['BTC']}₿\n"
-                   f"Your current USD balance is {stats['USD']:.2f}$\n")
-        if 'Total' in stats:
-            message += f"Your total balance is {stats['Total']:.2f}$\n"
+        if not isinstance(stats, Statistics):
+            self.logger.warning(f"Incorrect statistics were received, not of the `Statistics` type.\n{stats}")
+            await channel.send("An unusual type of statistics was detected, necessitating further inspection")
+            return
+
+        message = f"Things are as follows:\n"
+        for account in stats.accounts:
+            message += f"Your current {account.currency} balance is {account.balance}\n"
+
+        if stats.total is not None:
+            self.logger.info(stats.total)
+            message += f"Your total balance is {stats.total.balance:.2f} {stats.total.currency}\n"
 
         await channel.send(message)
 

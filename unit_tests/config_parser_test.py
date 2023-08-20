@@ -1,57 +1,54 @@
-import os
-import sys
-import json
 import unittest
+import tempfile
+import json
 import logging
-
-from io import StringIO
-
-from src.config_parser import get_api_data
-from src.generate_config import add_api_json
+from unittest.mock import patch
+from src.config_parser import get_api_data, get_pigamma_data
 
 # Disable logging during testing
 logging.disable(logging.CRITICAL)
 
 
-class TestGenerateConfig(unittest.TestCase):
+def create_temp_file(data):
+    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    with open(temp_file.name, 'w') as f:
+        json.dump(data, f)
+    return temp_file.name
+
+
+class TestFileParsing(unittest.TestCase):
     def setUp(self):
-        self.file_name = "test_api_config.json"
-        sys.stdout = StringIO()
-        add_api_json(self.file_name)
+        self.config_data = {
+            'api-key': 'your-api-key',
+            'api-secret': 'your-api-secret'
+        }
 
     def tearDown(self):
-        os.remove(self.file_name)
+        pass
 
-    def test_add_api_json(self):
-        self.assertTrue(os.path.exists(self.file_name))
-        with open(self.file_name, "r") as f:
-            conf_data = json.load(f)
-        self.assertEqual(conf_data, {"api-key": None, "api-secret": None})
+    def test_get_api_data_valid_file(self):
+        file_path = create_temp_file(self.config_data)
+        api_key, api_secret = get_api_data(file_path)
+        self.assertEqual(api_key, self.config_data['api-key'])
+        self.assertEqual(api_secret, self.config_data['api-secret'])
 
-    def test_get_api_data(self):
-        # Test case where file does not exist
-        nonexistent_file_name = "nonexistent_file.json"
-        if os.path.exists(nonexistent_file_name):
-            os.remove(nonexistent_file_name)
-        self.assertEqual(get_api_data(nonexistent_file_name), -1)
-        self.assertTrue(os.path.exists(nonexistent_file_name))
-        os.remove(nonexistent_file_name)
+    def test_get_api_data_invalid_file(self):
+        file_path = 'non_existent_file.json'
+        with patch('src.config_parser.generate_config.generate_api_json'):
+            result = get_api_data(file_path)
+        self.assertEqual(result, -1)
 
-        # Test case where file exists but is empty
-        empty_file_name = "test_empty_api_config.json"
-        add_api_json(empty_file_name)
-        self.assertEqual(get_api_data(empty_file_name), (None, None))
-        os.remove(empty_file_name)
+    def test_get_pigamma_data_valid_file(self):
+        pigamma_data = {'some_key': 'some_value'}
+        file_path = create_temp_file(pigamma_data)
+        data = get_pigamma_data(file_path)
+        self.assertEqual(data, pigamma_data)
 
-        # Test case where file exists and has valid data
-        with open(self.file_name, "r") as f:
-            conf_data = json.load(f)
-        conf_data["api-key"] = "test_api_key"
-        conf_data["api-secret"] = "test_api_secret"
-        with open(self.file_name, "w") as f:
-            json.dump(conf_data, f)
-
-        self.assertEqual(get_api_data(self.file_name), ("test_api_key", "test_api_secret"))
+    def test_get_pigamma_data_invalid_file(self):
+        file_path = 'non_existent_file.json'
+        with patch('src.config_parser.generate_config.generate_pigamma_json'):
+            result = get_pigamma_data(file_path)
+        self.assertEqual(result, None)
 
 
 if __name__ == '__main__':

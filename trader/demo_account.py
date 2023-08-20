@@ -50,9 +50,9 @@ class DemoAccount:
         :param to_account: The target account to transfer funds to.
         :type to_account: DemoAccount
         :param amount: The amount to be transferred. If not provided (or set to None),
-                       the entire available balance in the account will be transferred.
+            the entire available balance in the account will be transferred.
         :param exchange_rate: The exchange rate for converting the amount
-                              to the target account's currency. Default is 1.
+            to the target account's currency. Default is 1.
         """
         if amount is None:
             amount = self.balance

@@ -1,17 +1,15 @@
-import os
 import numpy as np
-import matplotlib.pyplot as plt
-from pandas import read_csv
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
 from keras.layers import Dropout
 
-from data_processing import reconstruct_data
+from sklearn.preprocessing import MinMaxScaler
 
-from model_handler import ModelTrainer
+from predictor.models.data_processing import reconstruct_data
+from predictor.models.model_handler import ModelTrainer
+
 
 class SnowfallTestTrain(ModelTrainer):
     def __init__(self, shape):
@@ -36,7 +34,7 @@ class SnowfallTestTrain(ModelTrainer):
     def train(self, train_data):
         train_data = np.reshape(train_data, (-1, 1))
 
-        # min-max normalixation (inverse to (0, 1) range)
+        # min-max normalization (inverse to (0, 1) range)
         data_transformed = self.scaler.fit_transform(train_data)
 
         train_x, train_y = reconstruct_data(data_transformed, self.NUM_OF_PREV_ITEMS)

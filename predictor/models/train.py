@@ -2,9 +2,11 @@ import os
 from pandas import read_csv
 from sf1.snowfall_training import SnowfallTestTrain
 
+
 def train(model, data, save_file):
     model.train(data)
     model.save_model(os.path.join(model.PATH, save_file))
+
 
 if __name__ == '__main__':
     data = read_csv(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dataset/tmp.csv'))

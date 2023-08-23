@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def reconstruct_data(data: list, num_of_prev_items: int) -> (np.array, np.array):
     """Reshape the data to input data and label(output).
 
@@ -23,6 +24,7 @@ def reconstruct_data(data: list, num_of_prev_items: int) -> (np.array, np.array)
         y.append(data[i + n, 0])
 
     return np.array(x), np.array(y)
+
 
 def train_test_split(data, train_cof):
     train, test = data[0:int(len(data) * train_cof), :], data[int(len(data) * train_cof):len(data), :]

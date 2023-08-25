@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 
 class ModelHandler(ABC):
-    PATH = os.path.dirname(__file__)
+    PATH_TO_CONF = os.path.join(os.path.dirname(__file__), 'fortune-nn-configs')
 
     def __init__(self):
         super().__init__()
@@ -19,7 +19,7 @@ class ModelHandler(ABC):
 
 
 class ModelTrainer(ABC):
-    PATH = os.path.dirname(__file__)
+    PATH_TO_CONF = os.path.join(os.path.dirname(__file__), 'fortune-nn-configs')
 
     def __init__(self, input_shape: tuple):
         super().__init__()

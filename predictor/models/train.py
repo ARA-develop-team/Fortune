@@ -3,9 +3,9 @@ from pandas import read_csv
 from sf1.snowfall_training import SnowfallTestTrain
 
 
-def train(model, data, save_file):
+def train(model, data, filename):
     model.train(data)
-    model.save_model(os.path.join(model.PATH, save_file))
+    model.save_model(os.path.join(model.PATH_TO_CONF, filename))
 
 
 if __name__ == '__main__':

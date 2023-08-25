@@ -3,8 +3,12 @@
 import logging
 
 
+def calculate_vector(previous_price, next_price):
+    return (next_price - previous_price) / previous_price
+
+
 class Analyst:
-    def __init__(self, threshold=0.75):
+    def __init__(self, threshold=0.0):
         self.threshold = threshold
 
         self.logger = logging.getLogger(__class__.__name__)

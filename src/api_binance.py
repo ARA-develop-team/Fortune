@@ -6,6 +6,9 @@ import logging
 import datetime
 
 from multiprocessing import Process, Queue
+
+import pandas
+
 from binance.client import Client
 from requests.exceptions import RequestException
 
@@ -189,6 +192,15 @@ class API(Client):
 
         self.logger.info(f"Saved {len(data)} records to \n{file_path}")
         return file_path
+
+    def load_last_prices(self, symbol, interval, limit=5):
+        klines = self.futures_klines(symbol=symbol, interval=interval, limit=limit)
+        df = pandas.DataFrame(klines, columns=["timestamp", "open", "high", "low", "close", "volume", "close_time",
+                                               "quote_asset_volume", "number_of_trades", "taker_buy_base_asset_volume",
+                                               "taker_buy_quote_asset_volume", "ignore"])
+
+        closing_prices = df["close"].astype(float)
+        return closing_prices
 
 
 def configure_binance_api(config_file):

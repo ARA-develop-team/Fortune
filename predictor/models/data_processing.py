@@ -1,6 +1,8 @@
 import numpy as np
 
-def reconstruct_data(data: list, num_of_prev_items: int) -> (np.array, np.array):
+def reconstruct_data(input_data: list, output_data: list, num_of_prev_items: int) -> (np.array, np.array):
+    """ len(input_data) = len(output_data)"""
+
     """Reshape the data to input data and label(output).
 
     For example - data_set=[[1], [2], [3], [4], [5], [6], [7], [8]], n=3
@@ -13,14 +15,14 @@ def reconstruct_data(data: list, num_of_prev_items: int) -> (np.array, np.array)
     :param n: number of previous number to predict next
     :return: input array - x; label(output) array - y
     """
-
+    # TODO change doc
     n = num_of_prev_items
     x, y = [], []
 
-    for i in range(len(data) - n):
-        a = data[i:(i + n), 0]
+    for i in range(len(input_data) - n):
+        a = input_data[i:(i + n)]
         x.append(a)
-        y.append(data[i + n, 0])
+        y.append(output_data[i + n])
 
     return np.array(x), np.array(y)
 

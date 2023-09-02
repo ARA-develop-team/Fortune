@@ -4,34 +4,37 @@ import numpy as np
 from ..data_processing import reconstruct_data
 
 class ModelTesting:
-    def __init__(self, *args):
-        self.model_handlers = args
+    def __init__(self, data_set, train_coefficient, output):
+        self.data_set = data_set
+        self.testing_data = data_set[int(len(data_set) * train_coefficient):]
 
-    def two_line_test(self, data_set, train_coefficient=0):
-        testing_data = data_set[int(len(data_set) * train_coefficient):] 
-        testing_data = np.reshape(testing_data, (-1, 1))
+        self.train_cofficient = train_coefficient
+        self.output_column = output
+        self.lines = []
 
-        lines = []
+        self.add_line(self.data_set[self.output_column], 'real_data')
+
+    def add_line(self, data_set, name: str):
+        line1, = plt.plot(data_set, label=name)
+        self.lines.append(line1)
+
+    def add_model(self, model, input_layers: list):
+        test_x, test_labels = reconstruct_data(np.array(self.testing_data[input_layers]), 
+                                               np.array(self.testing_data[self.output_column]), 
+                                               model.NUM_OF_PREV_ITEMS)
         
-        train_label_plot = data_set
-        line1, = plt.plot(train_label_plot, label='real data')
-        lines.append(line1)
+        test_predict = model.make_prediction(test_x)
 
-        # make prediction
-        for model in self.model_handlers:
-            test_x, test_labels = reconstruct_data(testing_data, model.NUM_OF_PREV_ITEMS)
-            test_predict = model.make_prediction(test_x)
-            test_score = mean_squared_error(test_labels, test_predict[:, 0])
-            print(f'[{model.__class__.__name__}|{model.model_name}] Score on test set: {test_score} MSE')
+        test_score = mean_squared_error(test_labels, test_predict)
+        print(f'[{model.__class__.__name__}|{model.model_name}] Score on test set: {test_score} MSE')
 
-            number_of_unlabaled_data = int(len(data_set) * train_coefficient) + 1 + model.NUM_OF_PREV_ITEMS
-            predict_plot = np.array([[np.nan]] * number_of_unlabaled_data).astype('float32')
-            predict_plot = np.concatenate((predict_plot.astype('float32'), 
+        number_of_unlabaled_data = int(len(self.data_set) * self.train_cofficient) + 1 + model.NUM_OF_PREV_ITEMS
+        predict_plot = np.array([[np.nan]] * number_of_unlabaled_data).astype('float32')
+        predict_plot = np.concatenate((predict_plot.astype('float32'), 
                                                 test_predict.astype('float32')))
-            
-            predicted_line, = plt.plot(predict_plot, label=f'{model.model_name}')
-            lines.append(predicted_line)
+        
+        self.add_line(predict_plot, model.model_name)
 
-        plt.legend(handles=lines)
+    def show_graph(self):
+        plt.legend(handles=self.lines)
         plt.show() # TODO show date on axis
-

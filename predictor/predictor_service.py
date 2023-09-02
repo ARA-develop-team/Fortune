@@ -1,11 +1,12 @@
 import logging
+from numpy import shape
 
 from .models.sf1.snowfall_model import Snowfall
 
 
 class Predictor:
     def __init__(self):
-        self.model_handler = Snowfall()
+        self.model_handler = Snowfall('model_15m_50:1_c-c')
         self.logger = logging.getLogger(__class__.__name__)
 
     def predict(self, data: list) -> int:
@@ -21,8 +22,8 @@ class Predictor:
         :return: predicted number
         """
 
-        if len(data) == self.model_handler.NUM_OF_PREV_ITEMS:
+        if shape(data) == self.model_handler.input_shape:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not lenght - {len(data)}"         
+            massage = f"Data should be shape of {self.model_handler.input_shape}, but not - {shape(data)}"         
             self.logger.error(massage)

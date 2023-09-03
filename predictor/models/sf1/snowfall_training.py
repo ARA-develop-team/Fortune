@@ -1,15 +1,15 @@
-import os
 import numpy as np
 import pickle
-
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
+
 from keras.layers import Dropout
 
-from data_processing import reconstruct_data
-from model_handler import ModelTrainer
+from sklearn.preprocessing import MinMaxScaler
+
+from predictor.models.data_processing import reconstruct_data
+from predictor.models.model_handler import ModelTrainer
 
 class SnowfallTestTrain(ModelTrainer):
     def __init__(self, shape):

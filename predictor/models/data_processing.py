@@ -35,6 +35,7 @@ def reconstruct_data(input_data: list, output_data: list, n: int) -> (np.array, 
 
     return np.array(x), np.array(y)
 
+
 def train_test_split(data, train_cof):
     train, test = data[0:int(len(data) * train_cof), :], data[int(len(data) * train_cof):len(data), :]
 

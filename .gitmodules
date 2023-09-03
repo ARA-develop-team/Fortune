@@ -1,0 +1,3 @@
+[submodule "predictor/models/predictor/models/fortune-nn-configs"]
+	path = predictor/models/predictor/models/fortune-nn-configs
+	url = git@github.com:ARA-develop-team/fortune-nn-configs.git

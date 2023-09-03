@@ -25,3 +25,4 @@ class Predictor:
         else:
             massage = f"Data should be shape of {self.model_handler.input_shape}, but not - {shape(data)}"         
             self.logger.error(massage)
+            return False

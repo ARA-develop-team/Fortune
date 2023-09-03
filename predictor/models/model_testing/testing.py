@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ..data_processing import reconstruct_data
 
+
 class ModelTesting:
     def __init__(self, data_set, train_coefficient, output):
         self.data_set = data_set

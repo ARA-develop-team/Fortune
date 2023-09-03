@@ -1,20 +1,19 @@
 import numpy as np
-from pandas import read_csv
-from sklearn.preprocessing import MinMaxScaler
 import keras
 import os
 import pickle
 
-from ..model_handler import ModelHandler
+from sklearn.preprocessing import MinMaxScaler
+
+from predictor.models.model_handler import ModelHandler
+
 
 class Snowfall(ModelHandler):
     def __init__(self, model_name='model_15m'):
         super().__init__()
-        PATH = os.path.dirname(__file__)
-
         self.model_name = model_name
 
-        path_to_model = os.path.join(PATH, model_name)
+        path_to_model = os.path.join(self.PATH_TO_CONF, model_name)
         self.model = keras.models.load_model(path_to_model)
 
         with open(os.path.join(PATH, model_name, 'input_scaler'),'rb') as f:
@@ -48,4 +47,3 @@ class Snowfall(ModelHandler):
         prediction = self.make_prediction(data_set)
 
         return prediction[0][0]
-    

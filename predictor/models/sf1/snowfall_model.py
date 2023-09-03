@@ -9,6 +9,7 @@ from ..model_handler import ModelHandler
 
 class Snowfall(ModelHandler):
     def __init__(self, model_name='model_15m'):
+        super().__init__()
         PATH = os.path.dirname(__file__)
 
         self.model_name = model_name

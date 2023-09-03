@@ -14,5 +14,5 @@ if __name__ == '__main__':
                  'Taker buy base asset volume', 'Taker buy quote asset volume', 
                  'Ignore']]
 
-    model = SnowfallTestTrain((50, 1))
-    train(model, data, data['Close'], 'model_15m_50:1')
+    model = SnowfallTestTrain((50, 10))
+    train(model, data, data['Close'], 'model_15m_50:10_all-c')

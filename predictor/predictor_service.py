@@ -1,7 +1,11 @@
+import os
 import logging
 from numpy import shape
+import numpy as np
 
 from .models.sf1.snowfall_model import Snowfall
+from predictor.models.model_testing.testing import ModelTesting
+from predictor.models.sf1.snowfall_training import SnowfallTestTrain
 
 
 class Predictor:
@@ -19,10 +23,37 @@ class Predictor:
         :param data: list of numbers of correct size
         :return: predicted number
         """
-
-        if shape(data) == self.model_handler.input_shape:
+        if shape(data)[0] == self.model_handler.NUM_OF_PREV_ITEMS:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"Data should be shape of {self.model_handler.input_shape}, but not - {shape(data)}"         
+            massage = f"The number of previous items should be {self.model_handler.NUM_OF_PREV_ITEMS}, but not - {shape(data)[0]}"         
             self.logger.error(massage)
             return False
+        
+    def train_main(self, data):
+        output_data = data[['Close']]
+        input_data = data[['Open', 'High', 'Low', 'Close', 'Volume', 
+                     'Quote asset volume', 'Number of trades', 
+                     'Taker buy base asset volume', 'Taker buy quote asset volume', 
+                     'Ignore']]
+        model = SnowfallTestTrain((50, 10))
+        Predictor._train(model, input_data, output_data, 'model_15m_50:10_all-c')
+
+    def test(self, data: list):
+        output_column = ['Close']
+
+        input_column1 = ['Open', 'High', 'Low', 'Close', 'Volume', 
+                'Quote asset volume', 'Number of trades', 
+                'Taker buy base asset volume', 'Taker buy quote asset volume', 
+                'Ignore']
+        model1 = Snowfall('model_15m_50:10_all-c')
+
+        test = ModelTesting(data, 0.7, output_column)
+        test.add_model(model1, input_column1)
+        test.add_model(self.model_handler, ['Close'])
+
+        test.show_graph()
+
+    def _train(model, input_data, output_data, save_file):
+        model.train(input_data, output_data)
+        model.save_model(os.path.join(model.PATH_TO_CONF, save_file))

@@ -12,7 +12,12 @@ from src.parse_arguments import parse_arguments
 def main():
     args_dict = parse_arguments()
     fortune = Fortune(**args_dict)
+
     fortune.run()
+
+    # fortune.train_predictor()
+    
+    # fortune.test_predictor()
 
 
 if __name__ == "__main__":

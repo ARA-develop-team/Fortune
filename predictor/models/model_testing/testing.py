@@ -1,7 +1,7 @@
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 import numpy as np
-from ..data_processing import reconstruct_data
+from predictor.models.data_processing import reconstruct_data
 
 
 class ModelTesting:
@@ -13,9 +13,9 @@ class ModelTesting:
         self.output_column = output
         self.lines = []
 
-        self.add_line(self.data_set[self.output_column], 'real_data')
+        self._add_line(self.data_set[self.output_column], 'real_data')
 
-    def add_line(self, data_set, name: str):
+    def _add_line(self, data_set, name: str):
         line1, = plt.plot(data_set, label=name)
         self.lines.append(line1)
 
@@ -34,7 +34,7 @@ class ModelTesting:
         predict_plot = np.concatenate((predict_plot.astype('float32'), 
                                                 test_predict.astype('float32')))
         
-        self.add_line(predict_plot, model.model_name)
+        self._add_line(predict_plot, model.model_name)
 
     def show_graph(self):
         plt.legend(handles=self.lines)

@@ -3,13 +3,11 @@ import keras
 import os
 import pickle
 
-from sklearn.preprocessing import MinMaxScaler
-
 from predictor.models.model_handler import ModelHandler
 
 
 class Snowfall(ModelHandler):
-    def __init__(self, model_name='model_15m'):
+    def __init__(self, model_name='model_15m_50:1_c-c'):
         super().__init__()
         self.model_name = model_name
 

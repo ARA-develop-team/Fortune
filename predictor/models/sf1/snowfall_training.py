@@ -37,7 +37,7 @@ class SnowfallTestTrain(ModelTrainer):
         train_data = np.reshape(train_data, (-1, self.input_shape[1]))
         label_data = np.reshape(label_data, (-1, 1))
 
-        # min-max normalixation (inverse to (0, 1) range)
+        # min-max normalization (inverse to (0, 1) range)
         data_transformed = self.input_scaler.fit_transform(train_data)
         label_transformed = self.output_scaler.fit_transform(label_data)
 

@@ -9,7 +9,7 @@ class ModelTesting:
         self.data_set = data_set
         self.testing_data = data_set[int(len(data_set) * train_coefficient):]
 
-        self.train_cofficient = train_coefficient
+        self.train_coefficient = train_coefficient
         self.output_column = output
         self.lines = []
 
@@ -29,8 +29,8 @@ class ModelTesting:
         test_score = mean_squared_error(test_labels, test_predict)
         print(f'[{model.__class__.__name__}|{model.model_name}] Score on test set: {test_score} MSE')
 
-        number_of_unlabaled_data = int(len(self.data_set) * self.train_cofficient) + 1 + model.NUM_OF_PREV_ITEMS
-        predict_plot = np.array([[np.nan]] * number_of_unlabaled_data).astype('float32')
+        number_of_unlabeled_data = int(len(self.data_set) * self.train_coefficient) + 1 + model.NUM_OF_PREV_ITEMS
+        predict_plot = np.array([[np.nan]] * number_of_unlabeled_data).astype('float32')
         predict_plot = np.concatenate((predict_plot.astype('float32'), 
                                                 test_predict.astype('float32')))
         

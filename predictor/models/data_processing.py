@@ -1,9 +1,8 @@
 import numpy as np
 
-def reconstruct_data(input_data: list, output_data: list, n: int) -> (np.array, np.array):
+def reconstruct_data(input_data: list|np.array, output_data: list|np.array, n: int) -> (np.array, np.array):
 
     """
-    n = number of previous items
     Match each element in output_data (except the first n element) 
     to list of previous n elements of input_data.
 
@@ -21,8 +20,9 @@ def reconstruct_data(input_data: list, output_data: list, n: int) -> (np.array, 
     (array([[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7]]), 
     array([4, 5, 6, 7, 8]))
 
-    :param data_set: array
-    :param n: number of previous number to predict next
+    :param input_data: array
+    :param output_data: array
+    :param n: number of previous items to predict next
     :return: reshaped input array and output array
     """
     # TODO change doc

@@ -1,6 +1,5 @@
 import os
 import logging
-from numpy import shape
 import numpy as np
 
 from .models.sf1.snowfall_model import Snowfall
@@ -10,7 +9,7 @@ from predictor.models.sf1.snowfall_training import SnowfallTestTrain
 
 class Predictor:
     def __init__(self):
-        self.model_handler = Snowfall('model_15m_50:1_c-c')
+        self.model_handler = Snowfall()
         self.logger = logging.getLogger(__class__.__name__)
 
     def predict(self, data: list) -> int:
@@ -23,10 +22,10 @@ class Predictor:
         :param data: list of numbers of correct size
         :return: predicted number
         """
-        if shape(data)[0] == self.model_handler.NUM_OF_PREV_ITEMS:
+        if np.shape(data)[0] == self.model_handler.NUM_OF_PREV_ITEMS:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"The number of previous items should be {self.model_handler.NUM_OF_PREV_ITEMS}, but not - {shape(data)[0]}"         
+            massage = f"The number of previous items should be {self.model_handler.NUM_OF_PREV_ITEMS}, but not - {np.shape(data)[0]}"         
             self.logger.error(massage)
             return False
         

@@ -27,12 +27,11 @@ class Snowfall(ModelHandler):
     def make_prediction(self, data_set):
 
         n_data_set = np.reshape(data_set, (-1, self.input_shape[1]))
-        # min-max normalixation (inverse to (0, 1) range)
+
+        # min-max normalization (inverse to (0, 1) range)
         data = self.input_scaler.transform(n_data_set)
+
         data = np.reshape(data, (-1, self.NUM_OF_PREV_ITEMS, self.input_shape[1]))
-
-        # data = np.reshape(data, (-1, 1, self.NUM_OF_PREV_ITEMS))
-
         prediction = self.model.predict(np.array(data))
 
         # inverse from (0, 1) range to actual value

@@ -15,10 +15,6 @@ def main():
 
     fortune.run()
 
-    # fortune.train_predictor()
-    
-    # fortune.test_predictor()
-
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 import numpy as np
 
-def reconstruct_data(input_data: list|np.array, output_data: list|np.array, n: int) -> (np.array, np.array):
+def reconstruct_data(input_data, output_data, n: int) -> (np.array, np.array):
 
     """
     Match each element in output_data (except the first n element) 

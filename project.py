@@ -6,7 +6,6 @@ import threading
 import asyncio
 
 from queue import Queue
-from pandas import read_csv
 
 from trader import trader_service
 from analyst import analyst_service
@@ -78,17 +77,3 @@ class Fortune:
 
         except KeyboardInterrupt:
             self.terminate()
-
-    def get_data():
-        data = read_csv('predictor/dataset/tmp.csv')
-        data = data.astype('float32')
-        return data
-
-    def train_predictor(self):
-        data = Fortune.get_data()
-        self.predictor.train_main(data)
-
-    def test_predictor(self):
-        data = Fortune.get_data()
-        self.predictor.test(data)
-    

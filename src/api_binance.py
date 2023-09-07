@@ -12,7 +12,8 @@ import pandas
 from binance.client import Client
 from requests.exceptions import RequestException
 
-from . import get_api_data
+from src import get_api_data
+from src.custom_types import kline_metric
 
 
 def convert_timestamp_to_str(timestamp):
@@ -185,9 +186,7 @@ class API(Client):
 
         with open(file_path, 'w', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(['Open time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Close time',
-                                 'Quote asset volume', 'Number of trades', 'Taker buy base asset volume',
-                                 'Taker buy quote asset volume', 'Ignore'])
+            csv_writer.writerow(kline_metric)
             csv_writer.writerows(data)
 
         self.logger.info(f"Saved {len(data)} records to \n{file_path}")
@@ -195,9 +194,7 @@ class API(Client):
 
     def load_last_prices(self, symbol, interval, limit=5):
         klines = self.futures_klines(symbol=symbol, interval=interval, limit=limit)
-        df = pandas.DataFrame(klines, columns=["timestamp", "open", "high", "low", "close", "volume", "close_time",
-                                               "quote_asset_volume", "number_of_trades", "taker_buy_base_asset_volume",
-                                               "taker_buy_quote_asset_volume", "ignore"])
+        df = pandas.DataFrame(klines, columns=kline_metric)
 
         closing_prices = df["close"].astype(float)
         return closing_prices

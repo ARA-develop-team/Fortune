@@ -1,6 +1,7 @@
 import os
 
 from abc import ABC, abstractmethod
+from pandas import DataFrame
 
 
 class ModelHandler(ABC):
@@ -10,7 +11,7 @@ class ModelHandler(ABC):
         super().__init__()
 
     @abstractmethod
-    def predict_next(self, data_set: list) -> int:
+    def predict_next(self, dataframe: DataFrame) -> int:
         pass
 
     @abstractmethod

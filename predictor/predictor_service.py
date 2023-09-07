@@ -1,6 +1,8 @@
 import logging
 
-from .models.sf1.snowfall_model import Snowfall
+from pandas import DataFrame
+
+from predictor.models.sf1.snowfall_model import Snowfall
 
 
 class Predictor:
@@ -8,7 +10,7 @@ class Predictor:
         self.model_handler = Snowfall()
         self.logger = logging.getLogger(__class__.__name__)
 
-    def predict(self, data: list) -> int:
+    def predict(self, data: DataFrame) -> int:
         """
         Make predictions using a list of data.
 

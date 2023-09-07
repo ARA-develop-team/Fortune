@@ -7,18 +7,32 @@ import datetime
 
 from multiprocessing import Process, Queue
 
-import pandas
+import pandas as pd
+import humanfriendly
 
 from binance.client import Client
 from requests.exceptions import RequestException
 
+import src.custom_types as custom_types
+
 from src import get_api_data
-from src.custom_types import kline_metric
 
 
 def convert_timestamp_to_str(timestamp):
     dt_object = datetime.date.fromtimestamp(timestamp / 1000)
     return dt_object.strftime('%-d %b %Y')
+
+
+def convert_columns_to_numeric(df_klines: pd.DataFrame) -> pd.DataFrame:
+    df_klines[custom_types.kline_float_columns] = df_klines[custom_types.kline_float_columns].astype(float)
+    df_klines[custom_types.kline_int_columns] = df_klines[custom_types.kline_int_columns].astype(int)
+    # TODO converting to int doesn't work properly
+    return df_klines
+
+
+def convert_klines_to_dataframe(klines) -> pd.DataFrame:
+    dataframe = pd.DataFrame(klines, columns=custom_types.kline_metric)
+    return convert_columns_to_numeric(dataframe)
 
 
 class API(Client):
@@ -40,29 +54,41 @@ class API(Client):
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(f"Client was configured successfully!")
 
-    def _get_new_price(self, symbol):
+    def _get_new_kline(self, symbol, interval):
         try:
-            response_ = self.get_avg_price(symbol=symbol)
+            response_ = self.futures_klines(symbol=symbol, interval=interval, limit=1)
         except RequestException as exception:
             self.logger.error(f"Unable to retrieve the latest price!\n{exception}")
             return None
-        else:
-            return response_['price']
 
-    def _update_price(self, symbol, interval):
-        """ Retrieves the latest price for a given trading symbol and puts it into the price_queue.
+        if not response_:
+            self.logger.error(f"Failed to retrieve the latest price due to an empty response.\nR: {response_}")
+            return None
 
-        :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to retrieve the price.
-        :param interval: The interval length in minutes for fetching the klines data.
+        elif len(response_) > 1:
+            self.logger.warning(f"Expected response size: 1, but received: {len(response_)}\nR: {response_}")
+            return [response_[-1]]
+
+        return response_
+
+    def _update_kline(self, symbol, interval):
+        """ Retrieves the latest price K-line for a given trading symbol and puts it into the price_queue.
+
+        :param symbol: The trading pair symbol (e.g. 'BTCUSDT') for which to retrieve the price.
+        :param interval: The kline interval length for fetching the klines data (e.g. KLINE_INTERVAL_15MINUTE).
         :return: None
         """
-        interval_in_seconds = interval * 60
+        interval_in_seconds = humanfriendly.parse_timespan(interval)
 
         while True:
-            new_price = self._get_new_price(symbol)
-            if new_price:
-                self.price_queue.put(new_price)
-                self.logger.info(f"Price updated. Current rate is {new_price}")
+            new_kline = self._get_new_kline(symbol, interval)
+            if new_kline is None:
+                continue
+
+            record = convert_klines_to_dataframe(new_kline)
+
+            self.price_queue.put(record)
+            self.logger.info(f"Price successfully updated.")
 
             time.sleep(interval_in_seconds)
 
@@ -70,17 +96,17 @@ class API(Client):
         """ Launches a subprocess to update the price for the given symbol at the specified interval.
 
         This function creates a new subprocess to continuously update the price for the specified trading symbol
-        at the given interval. The subprocess runs the `_update_price` method internally.
+        at the given interval. The subprocess runs the `_update_kline` method internally.
 
         :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to update the price.
-        :param interval: The time interval at which to update the price, specified in minutes.
+        :param interval: The time kline interval at which to update the price (e.g. KLINE_INTERVAL_15MINUTE).
         :return: None
         """
         if self._price_update_subprocess is not None:
             self.logger.warning("There is already an active subprocess for updating prices.")
             return
 
-        self._price_update_subprocess = Process(target=self._update_price, args=(symbol, interval))
+        self._price_update_subprocess = Process(target=self._update_kline, args=(symbol, interval))
         self._price_update_subprocess.daemon = True
         self._price_update_subprocess.start()
         self.logger.info("Price update subprocess was launched")
@@ -113,7 +139,7 @@ class API(Client):
         until the queue becomes empty. If the price queue is empty, the function waits and blocks until
         a new price is available in the queue.
 
-        :return: The latest price retrieved from the price queue. If the subprocess for updating prices is not running
+        :return: The latest kline retrieved from the price queue. If the subprocess for updating prices is not running
         or is not alive, 'None' value will be returned.
         """
         if not self._price_update_subprocess or not self._price_update_subprocess.is_alive():
@@ -124,7 +150,7 @@ class API(Client):
         while not self.price_queue.empty():
             price = self.price_queue.get()
 
-        return float(price)
+        return price
 
     def load_price_history(self, symbol, interval):
         """ Loads historical klines data for a specified symbol and time interval.
@@ -186,18 +212,36 @@ class API(Client):
 
         with open(file_path, 'w', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(kline_metric)
+            csv_writer.writerow(custom_types.kline_metric)
             csv_writer.writerows(data)
 
         self.logger.info(f"Saved {len(data)} records to \n{file_path}")
         return file_path
 
-    def load_last_prices(self, symbol, interval, limit=5):
-        klines = self.futures_klines(symbol=symbol, interval=interval, limit=limit)
-        df = pandas.DataFrame(klines, columns=kline_metric)
+    def load_last_prices(self, symbol, interval, limit):
+        """ Load the last 'limit' price data points for a given trading symbol and time interval.
 
-        closing_prices = df["close"].astype(float)
-        return closing_prices
+        :param symbol: The trading symbol (e.g., 'BTCUSDT').
+        :param interval: The time interval (e.g., Client.KLINE_INTERVAL_15MINUTE).
+        :param limit: The maximum number of data points to retrieve.
+
+        :return: A DataFrame containing the price data.
+        """
+        klines = self.futures_klines(symbol=symbol, interval=interval, limit=limit)
+        return convert_klines_to_dataframe(klines)
+
+    def load_last_prices_with_offset(self, symbol, interval, limit):
+        """ Load the last 'limit' price data points for a given trading symbol and time interval, excluding the last
+        data point.
+
+        :param symbol: The trading symbol (e.g., 'BTCUSDT').
+        :param interval: The time interval (e.g., Client.KLINE_INTERVAL_15MINUTE).
+        :param limit: The maximum number of data points to retrieve, excluding the last data point.
+
+        :return: A DataFrame containing the price data, excluding the last data point.
+        """
+        df_klines = self.load_last_prices(symbol, interval, limit + 1)
+        return df_klines.drop(df_klines.index[-1])
 
 
 def configure_binance_api(config_file):

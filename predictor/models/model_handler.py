@@ -26,5 +26,5 @@ class ModelTrainer(ABC):
         self.input_shape = input_shape
 
     @abstractmethod
-    def train(self, data: list) -> None:
+    def train(self, train_data, label_data) -> None:
         pass

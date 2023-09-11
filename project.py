@@ -1,6 +1,5 @@
 """ Fortune Module """
 
-import os
 import logging
 import threading
 import asyncio

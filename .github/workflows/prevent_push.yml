@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - no-push
 
 jobs:
   check_branch:
@@ -17,7 +18,7 @@ jobs:
 
       - name: Check if push is to master or develop
         run: |
-          if [[ $BRANCH_NAME == "master" || $BRANCH_NAME == "develop" ]]; then
+          if [[ $BRANCH_NAME == "master" || $BRANCH_NAME == "develop" || $BRANCH_NAME == "no-push" ]]; then
             echo "Pushing to $BRANCH_NAME branch is not allowed."
             exit 1
           fi

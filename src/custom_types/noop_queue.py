@@ -4,7 +4,7 @@ from queue import Queue
 
 
 class NoopQueue(Queue):
-    """ A no-operation (no-op) implementation of the Queue class.
+    """A no-operation (no-op) implementation of the Queue class.
 
     This class inherits from the Queue class and overrides the `put` and `get` methods to provide a
     behavior where items are not actually added or retrieved from the queue. Instead, any items added are
@@ -15,9 +15,9 @@ class NoopQueue(Queue):
     """
 
     def put(self, *args):
-        """ Discard the provided items without adding them to the queue."""
+        """Discard the provided items without adding them to the queue."""
         return
 
     def get(self, *args):
-        """ Return None without retrieving any items from the queue."""
+        """Return None without retrieving any items from the queue."""
         return None

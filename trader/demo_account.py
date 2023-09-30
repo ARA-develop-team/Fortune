@@ -22,7 +22,7 @@ class DemoAccount:
         return True
 
     def deposit(self, amount):
-        """ Deposit the specified amount into the account.
+        """Deposit the specified amount into the account.
         :param amount: The amount to be deposited.
         """
         if not self._is_valid_amount(amount):
@@ -32,7 +32,7 @@ class DemoAccount:
         self.logger.info(f"Deposited {amount} {self.currency}. New balance: {self.balance} {self.currency}.")
 
     def withdraw(self, amount):
-        """ Withdraw the specified amount from the account.
+        """Withdraw the specified amount from the account.
 
         :param amount: The amount to be withdrawn.
         :return: True if the withdrawal was successful, False otherwise.
@@ -45,7 +45,7 @@ class DemoAccount:
         return True
 
     def transfer(self, to_account, amount=None, exchange_rate=1):
-        """ Transfer funds to another account.
+        """Transfer funds to another account.
 
         :param to_account: The target account to transfer funds to.
         :type to_account: DemoAccount

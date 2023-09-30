@@ -18,14 +18,14 @@ from src.custom_types import kline_metric
 
 def convert_timestamp_to_str(timestamp):
     dt_object = datetime.date.fromtimestamp(timestamp / 1000)
-    return dt_object.strftime('%-d %b %Y')
+    return dt_object.strftime("%-d %b %Y")
 
 
 class API(Client):
-    """ Binance API """
+    """Binance API"""
 
-    CLIENT_CONFIG_FILE = 'api_config.json'
-    BTCUSDT = 'BTCUSDT'
+    CLIENT_CONFIG_FILE = "api_config.json"
+    BTCUSDT = "BTCUSDT"
 
     def __init__(self, api_key, api_secret):
         """
@@ -47,10 +47,10 @@ class API(Client):
             self.logger.error(f"Unable to retrieve the latest price!\n{exception}")
             return None
         else:
-            return response_['price']
+            return response_["price"]
 
     def _update_price(self, symbol, interval):
-        """ Retrieves the latest price for a given trading symbol and puts it into the price_queue.
+        """Retrieves the latest price for a given trading symbol and puts it into the price_queue.
 
         :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to retrieve the price.
         :param interval: The interval length in minutes for fetching the klines data.
@@ -67,7 +67,7 @@ class API(Client):
             time.sleep(interval_in_seconds)
 
     def launch_price_update_subprocess(self, symbol, interval):
-        """ Launches a subprocess to update the price for the given symbol at the specified interval.
+        """Launches a subprocess to update the price for the given symbol at the specified interval.
 
         This function creates a new subprocess to continuously update the price for the specified trading symbol
         at the given interval. The subprocess runs the `_update_price` method internally.
@@ -86,7 +86,7 @@ class API(Client):
         self.logger.info("Price update subprocess was launched")
 
     def terminate_price_update_subprocess(self):
-        """ Terminates the subprocess responsible for updating the price.
+        """Terminates the subprocess responsible for updating the price.
 
         This function terminates the subprocess that is responsible for updating the price of a trading symbol.
         If no subprocess is currently running, the function returns without taking any action.
@@ -107,7 +107,7 @@ class API(Client):
         self.logger.info("Price update subprocess was terminated.")
 
     def await_price_update(self):
-        """ Waits for a price update by retrieving the latest price from the price queue.
+        """Waits for a price update by retrieving the latest price from the price queue.
 
         If the price queue is not empty, this function retrieves and discards all existing prices
         until the queue becomes empty. If the price queue is empty, the function waits and blocks until
@@ -127,7 +127,7 @@ class API(Client):
         return float(price)
 
     def load_price_history(self, symbol, interval):
-        """ Loads historical klines data for a specified symbol and time interval.
+        """Loads historical klines data for a specified symbol and time interval.
 
         This function retrieves historical klines data for the specified trading symbol with the provided time interval.
         The data is fetched starting from '1 Jan 2000' up to the current date and time.
@@ -141,7 +141,7 @@ class API(Client):
         """
 
         all_data = []
-        end_date = datetime.datetime.now().strftime('%-d %b %Y')
+        end_date = datetime.datetime.now().strftime("%-d %b %Y")
         limit = 1000
 
         while True:
@@ -173,7 +173,7 @@ class API(Client):
         self.logger.info("No data duplication was detected")
 
     def save_price_history_csv(self, symbol, interval, file_path):
-        """ Save price history data to CSV
+        """Save price history data to CSV
 
         :param symbol: The trading pair symbol (e.g., 'BTCUSDT') for which to load historical data.
         :param interval: The time interval for the klines data (e.g., Client.KLINE_INTERVAL_15MINUTE).
@@ -184,7 +184,7 @@ class API(Client):
         data = self.load_price_history(symbol, interval)
         self._check_column_for_duplicates(data, 0)
 
-        with open(file_path, 'w', newline='') as csv_file:
+        with open(file_path, "w", newline="") as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(kline_metric)
             csv_writer.writerows(data)
@@ -201,7 +201,7 @@ class API(Client):
 
 
 def configure_binance_api(config_file):
-    """ Configures the Binance API client.
+    """Configures the Binance API client.
 
     This function reads the API configuration data from the specified file, creates a Binance API client instance,
     and returns it.
@@ -217,8 +217,8 @@ def configure_binance_api(config_file):
     return client
 
 
-if __name__ == '__main__':
-    api = configure_binance_api('./config/api_config.json')
+if __name__ == "__main__":
+    api = configure_binance_api("./config/api_config.json")
     prices = api.load_price_history(api.BTCUSDT, Client.KLINE_INTERVAL_15MINUTE)
     api.save_price_history_csv(api.BTCUSDT, api.KLINE_INTERVAL_15MINUTE, "./tmp.csv")
     print(len(prices))

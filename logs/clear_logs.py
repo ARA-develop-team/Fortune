@@ -3,11 +3,11 @@
 import os
 
 
-def clear_all_logs(log_dir='./'):
+def clear_all_logs(log_dir="./"):
     files = os.listdir(log_dir)
 
     for file in files:
-        if file.endswith('.log'):
+        if file.endswith(".log"):
             os.remove(os.path.join(log_dir, file))
 
 

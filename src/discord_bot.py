@@ -11,7 +11,7 @@ from .custom_types.statistics import Statistics
 
 
 class PiGamma(discord.Client):
-    CONFIG_FILE = 'pigamma_config.json'
+    CONFIG_FILE = "pigamma_config.json"
 
     def __init__(self, token, channel_id: int, stats_queue: Queue, exit_flag: asyncio.Event):
         super().__init__(intents=discord.Intents.default())
@@ -74,4 +74,4 @@ class PiGamma(discord.Client):
 
 def configure_pigamma(file, stats_queue, exit_flag):
     data = config_parser.get_pigamma_data(file)
-    PiGamma(data['TOKEN'], int(data['CHANNEL_ID']), stats_queue, exit_flag)
+    PiGamma(data["TOKEN"], int(data["CHANNEL_ID"]), stats_queue, exit_flag)

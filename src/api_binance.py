@@ -81,6 +81,7 @@ class API(Client):
         interval_in_seconds = humanfriendly.parse_timespan(interval)
 
         while True:
+            time.sleep(interval_in_seconds)
             new_kline = self._get_new_kline(symbol, interval)
             if new_kline is None:
                 continue
@@ -90,7 +91,6 @@ class API(Client):
             self.price_queue.put(record)
             self.logger.info(f"Price successfully updated.")
 
-            time.sleep(interval_in_seconds)
 
     def launch_price_update_subprocess(self, symbol, interval):
         """ Launches a subprocess to update the price for the given symbol at the specified interval.
@@ -259,6 +259,7 @@ def configure_binance_api(config_file):
 
     client = API(*api_data)
     return client
+
 
 
 if __name__ == '__main__':

@@ -24,8 +24,10 @@ class InfluxClient(influxdb_client.InfluxDBClient):
                              data_frame_measurement_name="cryptocurrency_market", data_frame_tag_column=[tag])
 
     def push_stats(self, stats: StatisticsRecord) -> None:
-        if len(stats.cryptocurrency_klines) > 0:
-            self.write_klines(stats.cryptocurrency_klines)
+        kline = stats.get_full_record()
+        
+        if len(kline) > 0:
+            self.write_klines(kline.assign())
 
 
 def configure_influx_client(config_path):

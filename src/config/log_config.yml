@@ -2,6 +2,11 @@ version: 1
 disable_existing_loggers: false
 
 handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: simple
+    level: INFO
+    stream: ext://sys.stdout
   file_handler:
     class: logging.FileHandler
     filename: ./logs/%(asctime)s.log
@@ -14,4 +19,4 @@ formatters:
 
 root:
   level: INFO
-  handlers: [file_handler]
+  handlers: [file_handler, console]

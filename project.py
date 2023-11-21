@@ -44,28 +44,6 @@ class Fortune:
             self.exit_flag
         )
 
-    # def get_initial_klines(self):
-    #     """ The initial K-lines do not include the last price because it will be added at the beginning of the
-    #     iteration. This is why it is essential to use 'load_last_prices_with_offset' instead of 'load_last_prices'.
-    #     """
-    #     return self.client.load_last_prices_with_offset(self.client.BTCUSDT, self.client.KLINE_INTERVAL_15MINUTE,
-    #                                                     self.predictor.model_handler.NUM_OF_PREV_ITEMS)
-
-    # def add_kline(self, new_kline):
-    #     """ Add a new K-line (price data point) to the existing DataFrame while removing the oldest kline and
-    #     maintaining a fixed size.
-
-    #     :param new_kline: A DataFrame representing the new kline data to be added.
-    #     """
-    #     self.klines_dataframe = self.klines_dataframe.iloc[1:]
-    #     self.klines_dataframe = pd.concat([self.klines_dataframe, new_kline], ignore_index=True)
-
-    # def update_kline(self):
-    #     new_kline = self.client.await_price_update()
-    #     self.stats_collector.add_klines(self.client.BTCUSDT, new_kline)    # TODO solve BTCUSDT
-    #     self.add_kline(new_kline)
-    #     return float(new_kline['close'][0])
-
     def process_iteration(self):
         predicted_rate = self.predictor.predict(self.stats_collector.klines_dataframe)
         self.stats_collector.add_prediction(predicted_rate)
@@ -80,7 +58,6 @@ class Fortune:
         self.stats_queue.put(self.trader.generate_stats(exchange_rate))
 
         self.stats_collector.wait_for_update()
-        # self.stats_collector.add_last_klines_to_record()
         self.stats_collector.push_record()
 
     def main_loop(self):

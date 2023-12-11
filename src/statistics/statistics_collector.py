@@ -50,11 +50,11 @@ class StatisticsCollector:
         """ The initial K-lines do not include the last price because it will be added at the beginning of the
         iteration. This is why it is essential to use 'load_last_prices_with_offset' instead of 'load_last_prices'.
         """
-        return self.client.load_last_prices(self.client.BTCUSDT, self.client.KLINE_INTERVAL_15MINUTE,
+        return self.client.load_last_prices(self.pair, self.client.KLINE_INTERVAL_15MINUTE,
                                                         self.NUM_OF_PREV_ITEMS)
 
     def launch_price_update_subprocess(self):
-        self.client.launch_price_update_subprocess(self.client.BTCUSDT, self.client.KLINE_INTERVAL_15MINUTE)
+        self.client.launch_price_update_subprocess(self.pair, self.client.KLINE_INTERVAL_15MINUTE)
 
     def terminate_price_update_subprocess(self):
         self.client.terminate_price_update_subprocess()

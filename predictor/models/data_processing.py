@@ -1,27 +1,37 @@
 import numpy as np
 
+def reconstruct_data(input_data, output_data, n: int) -> (np.array, np.array):
 
-def reconstruct_data(data: list, num_of_prev_items: int) -> (np.array, np.array):
-    """Reshape the data to input data and label(output).
+    """
+    Match each element in output_data (except the first n element) 
+    to list of previous n elements of input_data.
 
-    For example - data_set=[[1], [2], [3], [4], [5], [6], [7], [8]], n=3
+    The data will be reshaped so network could see what output should be to the given input data.
+    [1, 2, 3] -> 4; [2, 3, 4] -> [5]
+
+    the length of input_data should be = length of output_data.
+    Input and output data could be the same or different.
+    Input data could contain multiple or single features.
+    
+
+    For example - input_data = output_data = [[1], [2], [3], [4], [5], [6], [7], [8]], n=3
     The result - [1, 2, 3] -> 4; [2, 3, 4] -> [5] ...
-    The result data will be return in form:
+    The result data will be returned in form:
     (array([[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7]]), 
     array([4, 5, 6, 7, 8]))
 
-    :param data_set: numpy array
-    :param n: number of previous number to predict next
-    :return: input array - x; label(output) array - y
+    :param input_data: array
+    :param output_data: array
+    :param n: number of previous items to predict next
+    :return: reshaped input array and output array
     """
-
-    n = num_of_prev_items
+    # TODO change doc
     x, y = [], []
 
-    for i in range(len(data) - n):
-        a = data[i:(i + n), 0]
+    for i in range(len(input_data) - n):
+        a = input_data[i:(i + n)]
         x.append(a)
-        y.append(data[i + n, 0])
+        y.append(output_data[i + n])
 
     return np.array(x), np.array(y)
 

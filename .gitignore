@@ -1,6 +1,7 @@
 # Our code
 /src/config/api_config.json
 /src/config/pigamma_config.json
+/src/config/influxdb_config.json
 drafts/
 logs/*.log
 predictor/dataset/*.csv

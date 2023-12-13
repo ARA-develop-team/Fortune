@@ -1,4 +1,6 @@
+import os
 import logging
+import numpy as np
 
 from pandas import DataFrame
 
@@ -15,17 +17,14 @@ class Predictor:
         Make predictions using a list of data.
 
         This method uses the `model_handler` to predict the next number based on the input `data`. 
-        The input `data` should be of the correct size, which can be found in the `model_handler` documentation
-        or accessed using `self.model_handler.NUM_OF_PREV_ITEMS`.
-        ("Snowfall" model by default use - 5, you can see it in config.json).
+        The input `data` should be of the correct size, which can be accessed using `self.model_handler.NUM_OF_PREV_ITEMS`.
 
         :param data: list of numbers of correct size
         :return: predicted number
         """
-
-        if len(data) == self.model_handler.NUM_OF_PREV_ITEMS:
+        if np.shape(data)[0] == self.model_handler.NUM_OF_PREV_ITEMS:
             return self.model_handler.predict_next(data)
         else:
-            massage = f"Data should be size of {self.model_handler.NUM_OF_PREV_ITEMS}, but not length - {len(data)}"
+            massage = f"The number of previous items should be {self.model_handler.NUM_OF_PREV_ITEMS}, but not - {np.shape(data)[0]}"         
             self.logger.error(massage)
             return False

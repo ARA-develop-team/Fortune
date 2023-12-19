@@ -17,13 +17,13 @@ from src import log_setup
 
 
 class Fortune:
-    CONFIG_PATH = './src/config/'
+    CONFIG_PATH = "./src/config/"
 
     def __init__(self, **kwargs):
-        log_setup.configurate_logs(self.CONFIG_PATH + 'log_config.yml')
+        log_setup.configurate_logs(self.CONFIG_PATH + "log_config.yml")
         self.logger = logging.getLogger(__class__.__name__)
         self.exit_flag = asyncio.Event()
-        self.run_pigamma = kwargs['pigamma']
+        self.run_pigamma = kwargs["pigamma"]
 
         self.client = api_binance.configure_binance_api(self.CONFIG_PATH + api_binance.API.CLIENT_CONFIG_FILE)
         self.trader = trader_service.Trader()
@@ -35,9 +35,7 @@ class Fortune:
 
     def configure_pigamma_wrapper(self):
         discord_bot.configure_pigamma(
-            self.CONFIG_PATH + discord_bot.PiGamma.CONFIG_FILE,
-            self.stats_queue,
-            self.exit_flag
+            self.CONFIG_PATH + discord_bot.PiGamma.CONFIG_FILE, self.stats_queue, self.exit_flag
         )
 
     def process_iteration(self):

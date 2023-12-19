@@ -10,5 +10,4 @@ import src.log_setup
 import src.generate_config
 import src.api_binance
 
-print("*** ARA Development | Fortune ***\n"
-      "All rights reserved!")
+print("*** ARA Development | Fortune ***\n" "All rights reserved!")

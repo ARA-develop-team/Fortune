@@ -5,4 +5,3 @@ for analysing accuracy of prediction module.
 Get commands from Analysing Module.
 
 """
-

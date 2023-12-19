@@ -69,5 +69,5 @@ class TestDemoAccount(unittest.TestCase):
         self.assertEqual(to_account.balance, 500)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

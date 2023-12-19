@@ -14,13 +14,12 @@ def configurate_logs(file):
         logging.error("[FileNotFoundError] Logs were not configured properly!")
 
     else:
-        timestamp = time.strftime('%Y-%m-%d_(%H-%M-%S)', time.localtime())
+        timestamp = time.strftime("%Y-%m-%d_(%H-%M-%S)", time.localtime())
         config["handlers"]["file_handler"]["filename"] = f"./logs/{timestamp}.log"
 
         logging.config.dictConfig(config)
         logging.info("Logs were configured successfully.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     configurate_logs("./config/log_config.yml")
-

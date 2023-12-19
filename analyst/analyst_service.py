@@ -18,7 +18,7 @@ class Analyst:
         return vector >= self.threshold
 
     def make_trading_decision(self, vector):
-        """ Decide if purchasing cryptocurrency is profitable based on the probability of price growth.
+        """Decide if purchasing cryptocurrency is profitable based on the probability of price growth.
 
         :arg vector: probability of cryptocurrency price growth.
         :return: True if it is profitable to buy/keep crypto, False otherwise (to sell).
@@ -26,5 +26,3 @@ class Analyst:
         decision = self.analyse_threshold(vector)
         self.logger.info(f"Vector: {vector}, Decision: {decision}")
         return decision
-
-

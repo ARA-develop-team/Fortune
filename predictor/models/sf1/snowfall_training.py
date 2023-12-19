@@ -12,6 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from predictor.models.data_processing import reconstruct_data
 from predictor.models.model_handler import ModelTrainer
 
+
 class SnowfallTestTrain(ModelTrainer):
     def __init__(self, shape):
         super().__init__(shape)
@@ -43,16 +44,16 @@ class SnowfallTestTrain(ModelTrainer):
 
         train_x, train_y = reconstruct_data(data_transformed, label_transformed, self.NUM_OF_PREV_ITEMS)
 
-        self.model.compile(loss='mean_squared_error', optimizer='adam')
-        self.model.fit(train_x, train_y, epochs=self.epochs, batch_size=self.batch_size , verbose=self.verbose)
+        self.model.compile(loss="mean_squared_error", optimizer="adam")
+        self.model.fit(train_x, train_y, epochs=self.epochs, batch_size=self.batch_size, verbose=self.verbose)
 
     def save_model(self, path):
         self.model.save(path)
 
-        with open(os.path.join(path, 'input_scaler'), 'wb') as save_file:
-            pickle.dump(self.input_scaler, save_file)      
+        with open(os.path.join(path, "input_scaler"), "wb") as save_file:
+            pickle.dump(self.input_scaler, save_file)
 
-        with open(os.path.join(path, 'output_scaler'), 'wb') as save_file:
-            pickle.dump(self.output_scaler, save_file)                    
-        
+        with open(os.path.join(path, "output_scaler"), "wb") as save_file:
+            pickle.dump(self.output_scaler, save_file)
+
         print(f"Model 'sf' saved to - {path}")

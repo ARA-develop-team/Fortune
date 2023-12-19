@@ -1,0 +1,28 @@
+name: Linter
+
+on:
+  pull_request:
+    branches: [ "master", "develop" ]
+
+jobs:
+  linter:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          VALIDATE_PYTHON_BLACK: true
+          VALIDATE_PYTHON_BLACK_ARGS: "--line-length 120"
+
+      - name: Super-Linter
+        uses: super-linter/super-linter@v5.3.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: develop
+          # DISABLE_ERRORS: true    # avoid crashing PR
+          # VALIDATE_ALL_CODEBASE: false    # check only new changes
+          VALIDATE_PYTHON_BLACK: true
+          VALIDATE_PYTHON_BLACK_ARGS: "--line-length 120"

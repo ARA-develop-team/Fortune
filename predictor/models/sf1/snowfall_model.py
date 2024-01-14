@@ -53,7 +53,7 @@ class Snowfall(ModelHandler):
         return prediction
 
     def predict_next(self, dataframe):
-         """
+        """
         Make one prediction on data_set
 
         :param data_set: Pandas DataFrame that contains data to predict.

@@ -6,6 +6,10 @@ import pickle
 from predictor.models.model_handler import ModelHandler
 
 
+def parse_dataframe(dataframe):
+    return dataframe["close"].astype(float)
+
+
 class Snowfall(ModelHandler):
     def __init__(self, model_name='model_15m_50:1_c-c'):
         super().__init__()
@@ -40,7 +44,7 @@ class Snowfall(ModelHandler):
 
         return prediction
 
-    def predict_next(self, data_set):
-        prediction = self.make_prediction(data_set)
+    def predict_next(self, dataframe):
+        prediction = self.make_prediction(parse_dataframe(dataframe))
 
         return prediction[0][0]

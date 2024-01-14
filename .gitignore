@@ -5,7 +5,7 @@
 drafts/
 logs/*.log
 predictor/dataset/*.csv
-
+*.csv
 
 # cache
 /venv

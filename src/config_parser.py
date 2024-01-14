@@ -56,5 +56,9 @@ def get_pigamma_data(file):
     return data
 
 
+def get_influxdb_data(file):
+    return parse_json(file)
+
+
 if __name__ == "__main__":
     get_api_data("./config/api_config.json")

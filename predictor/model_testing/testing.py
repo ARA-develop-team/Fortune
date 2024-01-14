@@ -16,10 +16,27 @@ class ModelTesting:
         self._add_line(self.data_set[self.output_column], 'real_data')
 
     def _add_line(self, data_set, name: str):
+        """
+        Displayed data_set on graph (plot).
+
+        :param data_set: one-dimensional array of data to display on plot
+        :param name: data_set name that will be displayed on the legend
+        :return: None 
+        """
+
         line1, = plt.plot(data_set, label=name)
         self.lines.append(line1)
 
     def add_model(self, model, input_layers: list):
+        """
+        Test model and add testing results to graph.
+
+        :param model: ModelHandler
+        :param input_layers: list of str that contains the name of 
+        columns that are used for input.
+        :return: None
+        """
+
         test_x, test_labels = reconstruct_data(np.array(self.testing_data[input_layers]), 
                                                np.array(self.testing_data[self.output_column]), 
                                                model.NUM_OF_PREV_ITEMS)
@@ -37,5 +54,11 @@ class ModelTesting:
         self._add_line(predict_plot, model.model_name)
 
     def show_graph(self):
+        """
+        Display graph with added models.
+
+        :return: None
+        """
+
         plt.legend(handles=self.lines)
         plt.show() # TODO show date on axis

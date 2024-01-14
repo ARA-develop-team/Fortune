@@ -29,6 +29,14 @@ class Snowfall(ModelHandler):
         self.NUM_OF_PREV_ITEMS = self.model.layers[0].input_shape[1]
 
     def make_prediction(self, data_set):
+        """
+        Divides data_set into subsets of length that model takes to predict.
+        Then it makes and returns predictions on all subsets to test 
+        how the model performs.
+
+        :param data_set: Pandas DataFrame that contains data to predict.
+        :return: list of predictions
+        """
 
         n_data_set = np.reshape(data_set, (-1, self.input_shape[1]))
 
@@ -45,6 +53,12 @@ class Snowfall(ModelHandler):
         return prediction
 
     def predict_next(self, dataframe):
+        """
+        Make one prediction on data_set
+
+        :param data_set: Pandas DataFrame that contains data to predict.
+        :return: one prediction of the data set
+        """
         prediction = self.make_prediction(parse_dataframe(dataframe))
 
         return prediction[0][0]

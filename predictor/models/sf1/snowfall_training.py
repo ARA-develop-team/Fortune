@@ -34,6 +34,18 @@ class SnowfallTestTrain(ModelTrainer):
         self.output_scaler = MinMaxScaler(feature_range=(0, 1))
 
     def train(self, train_data, label_data):
+        """
+        Train self.model with train_data and label_data. 
+        
+        self.input_scaler and self.output_scaler are set in training.
+
+        :param train_data: Data that is used to predict. This data will be 
+        divided into sets where each set corresponds to one value of label data.
+        :param label_data: Right data that model needs to predict
+        :return: None
+
+        """
+
         train_data = np.reshape(train_data, (-1, self.input_shape[1]))
         label_data = np.reshape(label_data, (-1, 1))
 
@@ -47,6 +59,15 @@ class SnowfallTestTrain(ModelTrainer):
         self.model.fit(train_x, train_y, epochs=self.epochs, batch_size=self.batch_size , verbose=self.verbose)
 
     def save_model(self, path):
+        """
+        Saves model, input scaler, and output scaler at path. 
+        The path could be relative.
+        The model saves using Keras library.
+        Input scaler and Output scaler are saved using pickle library.
+
+        :param path: Relative path to the saved file.
+        :return: None
+        """
         self.model.save(path)
 
         with open(os.path.join(path, 'input_scaler'), 'wb') as save_file:

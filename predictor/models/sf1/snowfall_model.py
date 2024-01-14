@@ -17,7 +17,7 @@ class Snowfall(ModelHandler):
 
         path_to_model = os.path.join(self.PATH_TO_CONF, model_name)
         self.model = keras.models.load_model(path_to_model)
-        
+
         with open(os.path.join(ModelHandler.PATH_TO_CONF, model_name, 'input_scaler'),'rb') as f:
             self.input_scaler = pickle.load(f)
 

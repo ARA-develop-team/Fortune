@@ -19,4 +19,4 @@ formatters:
 
 root:
   level: INFO
-  handlers: [file_handler, console]
+  handlers: [file_handler]
